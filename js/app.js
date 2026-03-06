@@ -370,7 +370,7 @@ function calculateSimulation() {
             balance: balance,
             savings: savings,
             investment: investment,
-            netWorth: Math.max(0, netWorth) // floor at 0 for display
+            netWorth: netWorth // Removed Math.max(0, netWorth) to allow negatives
         });
     }
 
@@ -401,8 +401,8 @@ function updateSummaryUI(data, events, depletionAge, peakExpenseAge, peakExpense
     }
 
     // Rough Insurance Need (simplified: Peak Expense * 5 years minus current assets)
-    const currentAssets = data[0].netWorth;
-    const requiredInsurance = Math.max(0, (peakExpense * 5) - currentAssets);
+    const currentAssets = data[0] ? data[0].netWorth : 0;
+    const requiredInsurance = Math.max(0, (peakExpense * 5) - Math.max(0, currentAssets));
     document.getElementById('summary-insurance').innerHTML = `${Math.round(requiredInsurance).toLocaleString()}<span class="text-lg font-normal text-slate-500"> 万円</span>`;
 
     // Events List
@@ -508,6 +508,7 @@ function drawMainChart(data) {
                     position: 'right',
                     title: { display: true, text: '年間収支 (万円)' },
                     grid: { drawOnChartArea: false }, // only want the grid lines for one axis to show up
+                    min: 0, // Ensure income/expense bar charts stay grounded at 0, otherwise they float if assets go negative
                     ticks: {
                         callback: function (value) { return value.toLocaleString(); }
                     }
