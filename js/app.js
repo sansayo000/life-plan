@@ -159,12 +159,16 @@ function getInputs() {
         simYears: parseInt(getVal('sim-years')),
         incomeMain: getVal('income-main'),
         incomeGrowth: getVal('income-growth') / 100,
+        pensionStartMain: parseInt(getVal('pension-start-main')) || 65,
+        pensionAmountMain: getVal('pension-amount-main'),
 
         // Spouse
         hasSpouse: document.getElementById('has-spouse').checked,
         spouseAge: parseInt(getVal('spouse-age')),
         incomeSpouse: getVal('income-spouse'),
         incomeGrowthSpouse: getVal('income-growth-spouse') / 100,
+        pensionStartSpouse: parseInt(getVal('pension-start-spouse')) || 65,
+        pensionAmountSpouse: getVal('pension-amount-spouse'),
 
         // Assets & Scenarios
         savings: getVal('current-savings'),
@@ -239,21 +243,21 @@ function calculateSimulation() {
         let inflationMultiplier = Math.pow(1 + inputs.inflation, i);
 
         // --- Income ---
-        // Retirement assumption: 65. Pension rough estimate after 65 (placeholder logic)
-        let incomeRatio = yearAge < 65 ? Math.pow(1 + inputs.incomeGrowth, i) : 0;
-        let incomeM = yearAge < 65 ? inputs.incomeMain * incomeRatio : 200 * inflationMultiplier; // 200man pension placeholder
+        // Pension is dynamic based on user set ages and amounts
+        let incomeRatio = yearAge < inputs.pensionStartMain ? Math.pow(1 + inputs.incomeGrowth, i) : 0;
+        let incomeM = yearAge < inputs.pensionStartMain ? inputs.incomeMain * incomeRatio : inputs.pensionAmountMain * inflationMultiplier;
 
         let sAge = inputs.spouseAge + i;
         let incomeS = 0;
         if (inputs.hasSpouse) {
-            incomeS = sAge < 65 ? inputs.incomeSpouse * Math.pow(1 + inputs.incomeGrowthSpouse, i) : 100 * inflationMultiplier; // 100man pension spouse
+            incomeS = sAge < inputs.pensionStartSpouse ? inputs.incomeSpouse * Math.pow(1 + inputs.incomeGrowthSpouse, i) : inputs.pensionAmountSpouse * inflationMultiplier;
         }
 
         let totalIncome = incomeM + incomeS;
 
         // --- Expenses ---
         // 1. Living (scales with inflation, drops slightly in retirement)
-        let retirementDrop = yearAge >= 65 ? 0.8 : 1.0;
+        let retirementDrop = (yearAge >= inputs.pensionStartMain || sAge >= inputs.pensionStartSpouse) ? 0.8 : 1.0;
         let expLiving = inputs.livingVar * inflationMultiplier * retirementDrop;
         totalLiving += expLiving;
 
@@ -599,7 +603,19 @@ function loadData() {
             // In a real app we'd map all fields carefully
             document.getElementById('current-age').value = data.age;
             document.getElementById('income-main').value = data.incomeMain;
+            if (data.pensionStartMain) document.getElementById('pension-start-main').value = data.pensionStartMain;
+            if (data.pensionAmountMain) document.getElementById('pension-amount-main').value = data.pensionAmountMain;
+
             document.getElementById('current-savings').value = data.savings;
+
+            if (data.hasSpouse) {
+                document.getElementById('has-spouse').checked = true;
+                toggleSpouseInputs();
+                document.getElementById('spouse-age').value = data.spouseAge || 30;
+                document.getElementById('income-spouse').value = data.incomeSpouse || 0;
+                if (data.pensionStartSpouse) document.getElementById('pension-start-spouse').value = data.pensionStartSpouse;
+                if (data.pensionAmountSpouse) document.getElementById('pension-amount-spouse').value = data.pensionAmountSpouse;
+            }
             // Execute once loaded if data seems valid
             if (data.age) {
                 calculateSimulation();
