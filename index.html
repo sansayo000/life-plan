@@ -268,23 +268,87 @@
                                     class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm text-slate-500">万円</span>
                             </div>
                         </div>
-                        <div class="pt-2">
-                            <label
-                                class="block text-sm font-medium text-slate-700 mb-1 text-primary-700 flex items-center">
-                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
-                                </svg>
-                                シナリオ: 想定投資利回り（年率）
-                            </label>
-                            <div class="flex items-center space-x-4">
-                                <input type="range" id="investment-yield-slider" min="0" max="10" step="0.5" value="3"
-                                    class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-primary-600">
-                                <div class="relative w-20">
-                                    <input type="number" id="investment-yield" value="3.0" step="0.5"
-                                        class="input-field block w-full rounded-md border-slate-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm pr-6 text-right font-medium text-primary-700">
-                                    <span
-                                        class="absolute inset-y-0 right-0 pr-2 flex items-center text-sm text-primary-700">%</span>
+                        <div class="pt-4 border-t border-slate-100">
+                            <h3 class="text-sm font-medium text-slate-800 mb-3">毎月の積立投資・想定利回り</h3>
+                            <div class="space-y-4">
+                                <!-- 本人 -->
+                                <div class="bg-white p-4 rounded-lg border border-slate-200 shadow-sm">
+                                    <h4 class="text-sm font-semibold text-slate-700 mb-3 flex items-center">
+                                        <svg class="w-4 h-4 mr-1 text-primary-500" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z">
+                                            </path>
+                                        </svg>
+                                        本人
+                                    </h4>
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                        <div>
+                                            <label class="block text-xs text-slate-500 mb-1">毎月の投資額</label>
+                                            <div class="relative">
+                                                <input type="number" id="monthly-invest-main" value="3"
+                                                    class="input-field block w-full rounded-md border-slate-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm pr-12">
+                                                <span
+                                                    class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm text-slate-500">万円</span>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label class="block text-xs text-slate-500 mb-1">想定投資利回り（年率）</label>
+                                            <div class="flex items-center space-x-2">
+                                                <input type="range" id="investment-yield-main-slider" min="0" max="10"
+                                                    step="0.5" value="3"
+                                                    class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-primary-600">
+                                                <div class="relative w-20">
+                                                    <input type="number" id="investment-yield-main" value="3.0"
+                                                        step="0.5"
+                                                        class="input-field block w-full rounded-md border-slate-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm pr-6 text-right font-medium text-primary-700 bg-slate-50">
+                                                    <span
+                                                        class="absolute inset-y-0 right-0 pr-2 flex items-center text-sm text-primary-700">%</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- 配偶者 -->
+                                <div class="bg-white p-4 rounded-lg border border-slate-200 shadow-sm">
+                                    <h4 class="text-sm font-semibold text-slate-700 mb-3 flex items-center">
+                                        <svg class="w-4 h-4 mr-1 text-secondary" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z">
+                                            </path>
+                                        </svg>
+                                        配偶者
+                                    </h4>
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" id="spouse-invest-inputs">
+                                        <div>
+                                            <label class="block text-xs text-slate-500 mb-1">毎月の投資額</label>
+                                            <div class="relative">
+                                                <input type="number" id="monthly-invest-spouse" value="0" disabled
+                                                    class="input-field block w-full rounded-md border-slate-300 shadow-sm sm:text-sm pr-12 bg-slate-50 cursor-not-allowed">
+                                                <span
+                                                    class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm text-slate-500">万円</span>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label class="block text-xs text-slate-500 mb-1">想定投資利回り（年率）</label>
+                                            <div class="flex items-center space-x-2 opacity-50 transition-opacity duration-300"
+                                                id="spouse-yield-container">
+                                                <input type="range" id="investment-yield-spouse-slider" min="0" max="10"
+                                                    step="0.5" value="3" disabled
+                                                    class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-not-allowed accent-primary-600">
+                                                <div class="relative w-20">
+                                                    <input type="number" id="investment-yield-spouse" value="3.0"
+                                                        step="0.5" disabled
+                                                        class="input-field block w-full rounded-md border-slate-300 shadow-sm sm:text-sm pr-6 text-right font-medium text-primary-700 bg-slate-50 cursor-not-allowed">
+                                                    <span
+                                                        class="absolute inset-y-0 right-0 pr-2 flex items-center text-sm text-primary-700">%</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <p class="text-xs text-slate-400 mt-2">※配偶者情報を有効にした場合のみ入力可能です</p>
                                 </div>
                             </div>
                         </div>

@@ -28,8 +28,15 @@ function toggleSection(contentId) {
 
 function toggleSpouseInputs() {
     const isChecked = document.getElementById('has-spouse').checked;
+
+    // Original spouse inputs
     const spouseInputs = document.getElementById('spouse-inputs');
     const inputs = spouseInputs.querySelectorAll('input');
+
+    // New spouse investment inputs
+    const spouseInvestInputs = document.getElementById('spouse-invest-inputs');
+    const investInputs = spouseInvestInputs ? spouseInvestInputs.querySelectorAll('input') : [];
+    const spouseYieldContainer = document.getElementById('spouse-yield-container');
 
     if (isChecked) {
         spouseInputs.classList.remove('hidden');
@@ -38,6 +45,16 @@ function toggleSpouseInputs() {
             input.disabled = false;
             input.classList.remove('bg-slate-50', 'cursor-not-allowed');
         });
+
+        if (investInputs.length > 0) {
+            investInputs.forEach(input => {
+                input.disabled = false;
+                input.classList.remove('bg-slate-50', 'cursor-not-allowed');
+            });
+            if (spouseYieldContainer) {
+                spouseYieldContainer.classList.remove('opacity-50');
+            }
+        }
     } else {
         spouseInputs.classList.add('opacity-50');
         setTimeout(() => spouseInputs.classList.add('hidden'), 300);
@@ -45,6 +62,16 @@ function toggleSpouseInputs() {
             input.disabled = true;
             input.classList.add('bg-slate-50', 'cursor-not-allowed');
         });
+
+        if (investInputs.length > 0) {
+            investInputs.forEach(input => {
+                input.disabled = true;
+                input.classList.add('bg-slate-50', 'cursor-not-allowed');
+            });
+            if (spouseYieldContainer) {
+                spouseYieldContainer.classList.add('opacity-50');
+            }
+        }
     }
     // Auto-calculate on toggle if data exists
     if (simData.length > 0) calculateSimulation();
@@ -109,6 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const syncSliderInput = (sliderId, inputId) => {
         const slider = document.getElementById(sliderId);
         const input = document.getElementById(inputId);
+        if (!slider || !input) return;
         slider.addEventListener('input', (e) => {
             input.value = e.target.value;
             if (simData.length > 0) calculateSimulation();
@@ -119,7 +147,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
-    syncSliderInput('investment-yield-slider', 'investment-yield');
+    syncSliderInput('investment-yield-main-slider', 'investment-yield-main');
+    syncSliderInput('investment-yield-spouse-slider', 'investment-yield-spouse');
     syncSliderInput('inflation-rate-slider', 'inflation-rate');
 
     // Attach calculate button
@@ -172,8 +201,11 @@ function getInputs() {
 
         // Assets & Scenarios
         savings: getVal('current-savings'),
-        investment: getVal('current-investments'),
-        yield: getVal('investment-yield') / 100,
+        investmentMain: getVal('current-investments'), // Re-purposed the original id 'current-investments' to total for load, logic down later
+        monthlyInvestMain: getVal('monthly-invest-main'),
+        yieldMain: getVal('investment-yield-main') / 100,
+        monthlyInvestSpouse: getVal('monthly-invest-spouse'),
+        yieldSpouse: getVal('investment-yield-spouse') / 100,
         inflation: getVal('inflation-rate') / 100,
 
         // Expenses
@@ -217,7 +249,10 @@ function calculateSimulation() {
 
     let currentAge = inputs.age;
     let savings = inputs.savings;
-    let investment = inputs.investment;
+    // Split the initial investment evenly as a fallback, or if we want we can just put it all in main for starting 
+    // since we don't have separate current investment inputs for main/spouse
+    let investmentMain = inputs.investmentMain;
+    let investmentSpouse = 0;
     let mortgageBalance = inputs.housingType === 'mortgage' ? inputs.mortgageBal : 0;
 
     // Future buy state tracking
@@ -337,26 +372,52 @@ function calculateSimulation() {
         // --- Balance & Assets ---
         let balance = totalIncome - totalExpense;
 
-        // Investment yield applied to previous year balance
-        let investmentReturn = investment * inputs.yield;
+        let invReturnMain = investmentMain * inputs.yieldMain;
+        let invReturnSpouse = investmentSpouse * (inputs.hasSpouse ? inputs.yieldSpouse : 0);
 
-        // Simple strategy: invest 50% of positive balance, draw from savings then investments if negative
-        if (balance > 0) {
-            savings += balance * 0.5;
-            investment += balance * 0.5 + investmentReturn;
+        // Annual investment additions
+        let annualInvestMain = inputs.monthlyInvestMain * 12;
+        let annualInvestSpouse = inputs.hasSpouse ? (inputs.monthlyInvestSpouse * 12) : 0;
+        let totalAnnualInvest = annualInvestMain + annualInvestSpouse;
+
+        // Apply returns and intended investments
+        investmentMain += invReturnMain + annualInvestMain;
+        investmentSpouse += invReturnSpouse + annualInvestSpouse;
+
+        // Adjust balance by the intended investments (investment is a form of "expense" from cashflow perspective to shift to assets)
+        let cashBalanceAfterInvest = balance - totalAnnualInvest;
+
+        if (cashBalanceAfterInvest > 0) {
+            savings += cashBalanceAfterInvest;
         } else {
-            investment += investmentReturn; // returns still happen
-            let deficit = Math.abs(balance);
+            // Deficit covering strategy
+            let deficit = Math.abs(cashBalanceAfterInvest);
             if (savings >= deficit) {
                 savings -= deficit;
             } else {
                 deficit -= savings;
                 savings = 0;
-                investment -= deficit;
+
+                // Draw from investments to cover remaining deficit (draw from spouse first, then main linearly, or proportional)
+                let totalInv = investmentMain + investmentSpouse;
+                if (totalInv > 0) {
+                    let mainShare = investmentMain / totalInv;
+                    let spouseShare = investmentSpouse / totalInv;
+
+                    let drawMain = deficit * mainShare;
+                    let drawSpouse = deficit * spouseShare;
+
+                    investmentMain -= drawMain;
+                    investmentSpouse -= drawSpouse;
+                } else {
+                    // Everything zeroed out
+                    investmentMain = 0;
+                    investmentSpouse = 0;
+                }
             }
         }
 
-        let netWorth = savings + investment;
+        let netWorth = savings + investmentMain + investmentSpouse;
 
         if (netWorth < 0 && !depletionAge) {
             depletionAge = yearAge;
@@ -369,7 +430,7 @@ function calculateSimulation() {
             expense: totalExpense,
             balance: balance,
             savings: savings,
-            investment: investment,
+            investment: investmentMain + investmentSpouse,
             netWorth: netWorth // Removed Math.max(0, netWorth) to allow negatives
         });
     }
@@ -411,7 +472,7 @@ function updateSummaryUI(data, events, depletionAge, peakExpenseAge, peakExpense
     limitEvents.push({ age: peakExpenseAge, text: `支出ピーク予想 (${Math.round(peakExpense)}万円/年)`, type: 'alert' });
 
     // Deduplicate and re-sort
-    const uniqueEvents = limitEvents.filter((v, i, a) => a.findIndex(t => (t.age === v.age && t.text === v.text)) === i).sort((a, b) => a.age - b.age);
+    const uniqueEvents = limitEvents.filter((v, i, a) => a.findIndex(t => (t.age === v.age && t.text === t.text)) === i).sort((a, b) => a.age - b.age);
 
     const eventsHtml = uniqueEvents.map(e => {
         let colorClass = 'bg-blue-500';
@@ -609,14 +670,27 @@ function loadData() {
 
             document.getElementById('current-savings').value = data.savings;
 
+            // Individual investments
+            if (data.monthlyInvestMain !== undefined) document.getElementById('monthly-invest-main').value = data.monthlyInvestMain;
+            if (data.yieldMain !== undefined) document.getElementById('investment-yield-main').value = data.yieldMain * 100;
+
             if (data.hasSpouse) {
                 document.getElementById('has-spouse').checked = true;
                 toggleSpouseInputs();
                 document.getElementById('spouse-age').value = data.spouseAge || 30;
                 document.getElementById('income-spouse').value = data.incomeSpouse || 0;
+                if (data.incomeGrowthSpouse !== undefined) document.getElementById('income-growth-spouse').value = data.incomeGrowthSpouse * 100;
                 if (data.pensionStartSpouse) document.getElementById('pension-start-spouse').value = data.pensionStartSpouse;
                 if (data.pensionAmountSpouse) document.getElementById('pension-amount-spouse').value = data.pensionAmountSpouse;
+                if (data.monthlyInvestSpouse !== undefined) document.getElementById('monthly-invest-spouse').value = data.monthlyInvestSpouse;
+                if (data.yieldSpouse !== undefined) document.getElementById('investment-yield-spouse').value = data.yieldSpouse * 100;
             }
+
+            // Re-sync sliders
+            const range1 = document.getElementById('investment-yield-main-slider');
+            if (range1) range1.value = data.yieldMain * 100 || 3;
+            const range2 = document.getElementById('investment-yield-spouse-slider');
+            if (range2) range2.value = data.yieldSpouse * 100 || 3;
             // Execute once loaded if data seems valid
             if (data.age) {
                 calculateSimulation();
