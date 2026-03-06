@@ -1,15 +1,18 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ライフプランシミュレーション</title>
-    
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
-    
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap"
+        rel="stylesheet">
+
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -33,28 +36,45 @@
             }
         }
     </script>
-    
+
     <!-- Custom CSS -->
     <link rel="stylesheet" href="css/styles.css">
 </head>
+
 <body class="bg-slate-50 text-slate-800 font-sans min-h-screen">
 
     <header class="bg-white shadow-sm sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
             <h1 class="text-2xl font-bold text-slate-800 flex items-center">
-                <svg class="w-8 h-8 mr-2 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                <svg class="w-8 h-8 mr-2 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z">
+                    </path>
+                </svg>
                 Life Plan Simulator
             </h1>
             <div class="flex space-x-3">
-                <button id="btn-export-pdf" class="hidden md:flex items-center px-4 py-2 bg-white border border-slate-300 rounded-md shadow-sm text-sm font-medium text-slate-700 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors">
-                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                <button id="btn-export-pdf"
+                    class="hidden md:flex items-center px-4 py-2 bg-white border border-slate-300 rounded-md shadow-sm text-sm font-medium text-slate-700 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                        </path>
+                    </svg>
                     PDF出力
                 </button>
-                <button id="btn-export-excel" class="hidden md:flex items-center px-4 py-2 bg-white border border-slate-300 rounded-md shadow-sm text-sm font-medium text-slate-700 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors">
-                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                <button id="btn-export-excel"
+                    class="hidden md:flex items-center px-4 py-2 bg-white border border-slate-300 rounded-md shadow-sm text-sm font-medium text-slate-700 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                        </path>
+                    </svg>
                     Excel出力
                 </button>
-                <button id="btn-calculate" class="flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors">
+                <button id="btn-calculate"
+                    class="flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors">
                     シミュレーション実行
                 </button>
             </div>
@@ -63,31 +83,40 @@
 
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            
+
             <!-- Left Column: Input Forms -->
             <div class="lg:col-span-4 space-y-6">
                 <!-- Tabs for Mobile/Smaller screens can be added here later if needed, but going with a vertical accordion/card stack for simplicity -->
-                
+
                 <!-- Basic Info Card -->
                 <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden card-hover">
-                    <div class="px-6 py-4 border-b border-slate-100 bg-slate-50 flex justify-between items-center cursor-pointer" onclick="toggleSection('basic-info-content')">
+                    <div class="px-6 py-4 border-b border-slate-100 bg-slate-50 flex justify-between items-center cursor-pointer"
+                        onclick="toggleSection('basic-info-content')">
                         <h2 class="text-lg font-semibold text-slate-800 flex items-center">
-                            <span class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center mr-3 font-bold text-sm">1</span>
+                            <span
+                                class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center mr-3 font-bold text-sm">1</span>
                             基本情報・収入
                         </h2>
-                        <svg class="w-5 h-5 text-slate-400 transform transition-transform duration-200" id="basic-info-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        <svg class="w-5 h-5 text-slate-400 transform transition-transform duration-200"
+                            id="basic-info-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7">
+                            </path>
+                        </svg>
                     </div>
                     <div id="basic-info-content" class="p-6 space-y-4">
                         <div class="grid grid-cols-2 gap-4">
                             <div>
                                 <label class="block text-sm font-medium text-slate-700 mb-1">現在の年齢</label>
-                                <input type="number" id="current-age" value="30" class="input-field block w-full rounded-md border-slate-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
+                                <input type="number" id="current-age" value="30"
+                                    class="input-field block w-full rounded-md border-slate-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-slate-700 mb-1">シミュレーション期間</label>
                                 <div class="relative">
-                                    <input type="number" id="sim-years" value="50" class="input-field block w-full rounded-md border-slate-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm pr-8">
-                                    <span class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm text-slate-500">年</span>
+                                    <input type="number" id="sim-years" value="50"
+                                        class="input-field block w-full rounded-md border-slate-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm pr-8">
+                                    <span
+                                        class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm text-slate-500">年</span>
                                 </div>
                             </div>
                         </div>
@@ -98,15 +127,19 @@
                                 <div>
                                     <label class="block text-xs text-slate-500 mb-1">現在の年収</label>
                                     <div class="relative">
-                                        <input type="number" id="income-main" value="450" class="input-field block w-full rounded-md border-slate-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm pr-12">
-                                        <span class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm text-slate-500">万円</span>
+                                        <input type="number" id="income-main" value="450"
+                                            class="input-field block w-full rounded-md border-slate-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm pr-12">
+                                        <span
+                                            class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm text-slate-500">万円</span>
                                     </div>
                                 </div>
                                 <div>
                                     <label class="block text-xs text-slate-500 mb-1">予想昇給率（年）</label>
                                     <div class="relative">
-                                        <input type="number" id="income-growth" value="1.5" step="0.1" class="input-field block w-full rounded-md border-slate-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm pr-8">
-                                        <span class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm text-slate-500">%</span>
+                                        <input type="number" id="income-growth" value="1.5" step="0.1"
+                                            class="input-field block w-full rounded-md border-slate-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm pr-8">
+                                        <span
+                                            class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm text-slate-500">%</span>
                                     </div>
                                 </div>
                             </div>
@@ -116,21 +149,37 @@
                             <div class="flex items-center justify-between mb-3">
                                 <h3 class="text-sm font-medium text-slate-800">配偶者収入（手取り）</h3>
                                 <label class="inline-flex items-center cursor-pointer">
-                                    <input type="checkbox" id="has-spouse" class="sr-only peer" onchange="toggleSpouseInputs()">
-                                    <div class="w-9 h-5 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary-500"></div>
+                                    <input type="checkbox" id="has-spouse" class="sr-only peer"
+                                        onchange="toggleSpouseInputs()">
+                                    <div
+                                        class="w-9 h-5 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary-500">
+                                    </div>
                                 </label>
                             </div>
                             <div id="spouse-inputs" class="space-y-3 hidden opacity-50 transition-opacity duration-300">
                                 <div class="grid grid-cols-2 gap-4">
                                     <div>
                                         <label class="block text-xs text-slate-500 mb-1">年齢</label>
-                                        <input type="number" id="spouse-age" value="30" disabled class="input-field block w-full rounded-md border-slate-300 shadow-sm sm:text-sm bg-slate-50 cursor-not-allowed">
+                                        <input type="number" id="spouse-age" value="30" disabled
+                                            class="input-field block w-full rounded-md border-slate-300 shadow-sm sm:text-sm bg-slate-50 cursor-not-allowed">
                                     </div>
                                     <div>
                                         <label class="block text-xs text-slate-500 mb-1">現在の年収</label>
                                         <div class="relative">
-                                            <input type="number" id="income-spouse" value="0" disabled class="input-field block w-full rounded-md border-slate-300 shadow-sm sm:text-sm pr-12 bg-slate-50 cursor-not-allowed">
-                                            <span class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm text-slate-500">万円</span>
+                                            <input type="number" id="income-spouse" value="0" disabled
+                                                class="input-field block w-full rounded-md border-slate-300 shadow-sm sm:text-sm pr-12 bg-slate-50 cursor-not-allowed">
+                                            <span
+                                                class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm text-slate-500">万円</span>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs text-slate-500 mb-1">予想昇給率（年）</label>
+                                        <div class="relative">
+                                            <input type="number" id="income-growth-spouse" value="1.5" step="0.1"
+                                                disabled
+                                                class="input-field block w-full rounded-md border-slate-300 shadow-sm sm:text-sm pr-8 bg-slate-50 cursor-not-allowed">
+                                            <span
+                                                class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm text-slate-500">%</span>
                                         </div>
                                     </div>
                                 </div>
@@ -141,51 +190,75 @@
 
                 <!-- Assets & Savings Card -->
                 <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden card-hover">
-                    <div class="px-6 py-4 border-b border-slate-100 bg-slate-50 flex justify-between items-center cursor-pointer" onclick="toggleSection('assets-info-content')">
+                    <div class="px-6 py-4 border-b border-slate-100 bg-slate-50 flex justify-between items-center cursor-pointer"
+                        onclick="toggleSection('assets-info-content')">
                         <h2 class="text-lg font-semibold text-slate-800 flex items-center">
-                            <span class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mr-3 font-bold text-sm">2</span>
+                            <span
+                                class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mr-3 font-bold text-sm">2</span>
                             現在資産・投資
                         </h2>
-                        <svg class="w-5 h-5 text-slate-400 rotate-180 transform transition-transform duration-200" id="assets-info-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        <svg class="w-5 h-5 text-slate-400 rotate-180 transform transition-transform duration-200"
+                            id="assets-info-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7">
+                            </path>
+                        </svg>
                     </div>
                     <div id="assets-info-content" class="p-6 space-y-4 hidden">
                         <div>
                             <label class="block text-sm font-medium text-slate-700 mb-1">現在の貯蓄額（現金・預金）</label>
                             <div class="relative">
-                                <input type="number" id="current-savings" value="300" class="input-field block w-full rounded-md border-slate-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm pr-12">
-                                <span class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm text-slate-500">万円</span>
+                                <input type="number" id="current-savings" value="300"
+                                    class="input-field block w-full rounded-md border-slate-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm pr-12">
+                                <span
+                                    class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm text-slate-500">万円</span>
                             </div>
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-slate-700 mb-1">現在の投資資産（株式・投信など）</label>
                             <div class="relative">
-                                <input type="number" id="current-investments" value="150" class="input-field block w-full rounded-md border-slate-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm pr-12">
-                                <span class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm text-slate-500">万円</span>
+                                <input type="number" id="current-investments" value="150"
+                                    class="input-field block w-full rounded-md border-slate-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm pr-12">
+                                <span
+                                    class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm text-slate-500">万円</span>
                             </div>
                         </div>
                         <div class="pt-2">
-                            <label class="block text-sm font-medium text-slate-700 mb-1 text-primary-700 flex items-center">
-                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+                            <label
+                                class="block text-sm font-medium text-slate-700 mb-1 text-primary-700 flex items-center">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                                </svg>
                                 シナリオ: 想定投資利回り（年率）
                             </label>
                             <div class="flex items-center space-x-4">
-                                <input type="range" id="investment-yield-slider" min="0" max="10" step="0.5" value="3" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-primary-600">
+                                <input type="range" id="investment-yield-slider" min="0" max="10" step="0.5" value="3"
+                                    class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-primary-600">
                                 <div class="relative w-20">
-                                    <input type="number" id="investment-yield" value="3.0" step="0.5" class="input-field block w-full rounded-md border-slate-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm pr-6 text-right font-medium text-primary-700">
-                                    <span class="absolute inset-y-0 right-0 pr-2 flex items-center text-sm text-primary-700">%</span>
+                                    <input type="number" id="investment-yield" value="3.0" step="0.5"
+                                        class="input-field block w-full rounded-md border-slate-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm pr-6 text-right font-medium text-primary-700">
+                                    <span
+                                        class="absolute inset-y-0 right-0 pr-2 flex items-center text-sm text-primary-700">%</span>
                                 </div>
                             </div>
                         </div>
                         <div class="pt-2">
-                            <label class="block text-sm font-medium text-slate-700 mb-1 text-orange-600 flex items-center">
-                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"></path></svg>
+                            <label
+                                class="block text-sm font-medium text-slate-700 mb-1 text-orange-600 flex items-center">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"></path>
+                                </svg>
                                 シナリオ: 想定インフレ率（年率）
                             </label>
                             <div class="flex items-center space-x-4">
-                                <input type="range" id="inflation-rate-slider" min="0" max="5" step="0.1" value="1.5" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-orange-500">
+                                <input type="range" id="inflation-rate-slider" min="0" max="5" step="0.1" value="1.5"
+                                    class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-orange-500">
                                 <div class="relative w-20">
-                                    <input type="number" id="inflation-rate" value="1.5" step="0.1" class="input-field block w-full rounded-md border-slate-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 sm:text-sm pr-6 text-right font-medium text-orange-600">
-                                    <span class="absolute inset-y-0 right-0 pr-2 flex items-center text-sm text-orange-600">%</span>
+                                    <input type="number" id="inflation-rate" value="1.5" step="0.1"
+                                        class="input-field block w-full rounded-md border-slate-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 sm:text-sm pr-6 text-right font-medium text-orange-600">
+                                    <span
+                                        class="absolute inset-y-0 right-0 pr-2 flex items-center text-sm text-orange-600">%</span>
                                 </div>
                             </div>
                             <p class="text-xs text-slate-400 mt-2">※インフレ率は生活費や教育費の将来予測に影響します</p>
@@ -195,20 +268,28 @@
 
                 <!-- Expenses Card -->
                 <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden card-hover">
-                    <div class="px-6 py-4 border-b border-slate-100 bg-slate-50 flex justify-between items-center cursor-pointer" onclick="toggleSection('expenses-info-content')">
+                    <div class="px-6 py-4 border-b border-slate-100 bg-slate-50 flex justify-between items-center cursor-pointer"
+                        onclick="toggleSection('expenses-info-content')">
                         <h2 class="text-lg font-semibold text-slate-800 flex items-center">
-                            <span class="w-8 h-8 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center mr-3 font-bold text-sm">3</span>
+                            <span
+                                class="w-8 h-8 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center mr-3 font-bold text-sm">3</span>
                             支出・ライフイベント
                         </h2>
-                        <svg class="w-5 h-5 text-slate-400 rotate-180 transform transition-transform duration-200" id="expenses-info-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        <svg class="w-5 h-5 text-slate-400 rotate-180 transform transition-transform duration-200"
+                            id="expenses-info-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7">
+                            </path>
+                        </svg>
                     </div>
                     <div id="expenses-info-content" class="p-6 space-y-5 hidden">
                         <!-- Living Cost -->
                         <div>
                             <label class="block text-sm font-medium text-slate-700 mb-1">基本生活費（月額）</label>
                             <div class="relative">
-                                <input type="number" id="living-expense" value="25" class="input-field block w-full rounded-md border-slate-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm pr-12">
-                                <span class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm text-slate-500">万円</span>
+                                <input type="number" id="living-expense" value="25"
+                                    class="input-field block w-full rounded-md border-slate-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm pr-12">
+                                <span
+                                    class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm text-slate-500">万円</span>
                             </div>
                             <p class="text-xs text-slate-500 mt-1" id="living-expense-yearly-display">年間: 300万円</p>
                         </div>
@@ -217,20 +298,24 @@
                         <div class="pt-4 border-t border-slate-100">
                             <h3 class="text-sm font-medium text-slate-800 mb-3">住宅費</h3>
                             <div class="mb-3">
-                                <select id="housing-type" class="input-field block w-full rounded-md border-slate-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm" onchange="toggleHousingType()">
+                                <select id="housing-type"
+                                    class="input-field block w-full rounded-md border-slate-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+                                    onchange="toggleHousingType()">
                                     <option value="rent">賃貸（ずっと）</option>
                                     <option value="mortgage">持ち家（ローン返済中）</option>
                                     <option value="buy_future">将来購入予定</option>
                                 </select>
                             </div>
-                            
+
                             <!-- Rent -->
                             <div id="housing-rent" class="space-y-3">
                                 <div>
                                     <label class="block text-xs text-slate-500 mb-1">家賃（月額）</label>
                                     <div class="relative">
-                                        <input type="number" id="rent-expense" value="10" class="input-field block w-full rounded-md border-slate-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm pr-12">
-                                        <span class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm text-slate-500">万円</span>
+                                        <input type="number" id="rent-expense" value="10"
+                                            class="input-field block w-full rounded-md border-slate-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm pr-12">
+                                        <span
+                                            class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm text-slate-500">万円</span>
                                     </div>
                                 </div>
                             </div>
@@ -241,64 +326,80 @@
                                     <div>
                                         <label class="block text-xs text-slate-500 mb-1">ローン残高</label>
                                         <div class="relative">
-                                            <input type="number" id="mortgage-balance" value="3000" class="input-field block w-full rounded-md border-slate-300 shadow-sm sm:text-sm pr-12">
-                                            <span class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm text-slate-500">万円</span>
+                                            <input type="number" id="mortgage-balance" value="3000"
+                                                class="input-field block w-full rounded-md border-slate-300 shadow-sm sm:text-sm pr-12">
+                                            <span
+                                                class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm text-slate-500">万円</span>
                                         </div>
                                     </div>
                                     <div>
                                         <label class="block text-xs text-slate-500 mb-1">残り期間</label>
                                         <div class="relative">
-                                            <input type="number" id="mortgage-years" value="25" class="input-field block w-full rounded-md border-slate-300 shadow-sm sm:text-sm pr-8">
-                                            <span class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm text-slate-500">年</span>
+                                            <input type="number" id="mortgage-years" value="25"
+                                                class="input-field block w-full rounded-md border-slate-300 shadow-sm sm:text-sm pr-8">
+                                            <span
+                                                class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm text-slate-500">年</span>
                                         </div>
                                     </div>
                                     <div>
                                         <label class="block text-xs text-slate-500 mb-1">金利（年利）</label>
                                         <div class="relative">
-                                            <input type="number" id="mortgage-rate" value="1.0" step="0.1" class="input-field block w-full rounded-md border-slate-300 shadow-sm sm:text-sm pr-8">
-                                            <span class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm text-slate-500">%</span>
+                                            <input type="number" id="mortgage-rate" value="1.0" step="0.1"
+                                                class="input-field block w-full rounded-md border-slate-300 shadow-sm sm:text-sm pr-8">
+                                            <span
+                                                class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm text-slate-500">%</span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <!-- Future Buy -->
                             <div id="housing-buy-future" class="space-y-3 hidden">
                                 <div class="grid grid-cols-2 gap-4">
                                     <div>
                                         <label class="block text-xs text-slate-500 mb-1">購入予定年齢</label>
                                         <div class="relative">
-                                            <input type="number" id="buy-age" value="35" class="input-field block w-full rounded-md border-slate-300 shadow-sm sm:text-sm pr-8">
-                                            <span class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm text-slate-500">歳</span>
+                                            <input type="number" id="buy-age" value="35"
+                                                class="input-field block w-full rounded-md border-slate-300 shadow-sm sm:text-sm pr-8">
+                                            <span
+                                                class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm text-slate-500">歳</span>
                                         </div>
                                     </div>
                                     <div>
                                         <label class="block text-xs text-slate-500 mb-1">物件価格</label>
                                         <div class="relative">
-                                            <input type="number" id="buy-price" value="4000" class="input-field block w-full rounded-md border-slate-300 shadow-sm sm:text-sm pr-12">
-                                            <span class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm text-slate-500">万円</span>
+                                            <input type="number" id="buy-price" value="4000"
+                                                class="input-field block w-full rounded-md border-slate-300 shadow-sm sm:text-sm pr-12">
+                                            <span
+                                                class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm text-slate-500">万円</span>
                                         </div>
                                     </div>
                                     <div>
                                         <label class="block text-xs text-slate-500 mb-1">頭金（購入時出費）</label>
                                         <div class="relative">
-                                            <input type="number" id="buy-downpayment" value="500" class="input-field block w-full rounded-md border-slate-300 shadow-sm sm:text-sm pr-12">
-                                            <span class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm text-slate-500">万円</span>
+                                            <input type="number" id="buy-downpayment" value="500"
+                                                class="input-field block w-full rounded-md border-slate-300 shadow-sm sm:text-sm pr-12">
+                                            <span
+                                                class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm text-slate-500">万円</span>
                                         </div>
                                     </div>
                                     <div>
                                         <label class="block text-xs text-slate-500 mb-1">ローン設定金利</label>
                                         <div class="relative">
-                                            <input type="number" id="buy-rate" value="1.5" step="0.1" class="input-field block w-full rounded-md border-slate-300 shadow-sm sm:text-sm pr-8">
-                                            <span class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm text-slate-500">%</span>
+                                            <input type="number" id="buy-rate" value="1.5" step="0.1"
+                                                class="input-field block w-full rounded-md border-slate-300 shadow-sm sm:text-sm pr-8">
+                                            <span
+                                                class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm text-slate-500">%</span>
                                         </div>
                                     </div>
                                 </div>
                                 <div>
                                     <label class="block text-xs text-slate-500 mb-1">購入までの現在家賃（月額）</label>
                                     <div class="relative">
-                                        <input type="number" id="buy-current-rent" value="10" class="input-field block w-full rounded-md border-slate-300 shadow-sm sm:text-sm pr-12">
-                                        <span class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm text-slate-500">万円</span>
+                                        <input type="number" id="buy-current-rent" value="10"
+                                            class="input-field block w-full rounded-md border-slate-300 shadow-sm sm:text-sm pr-12">
+                                        <span
+                                            class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm text-slate-500">万円</span>
                                     </div>
                                 </div>
                             </div>
@@ -308,25 +409,34 @@
                         <div class="pt-4 border-t border-slate-100">
                             <div class="flex items-center justify-between mb-3">
                                 <h3 class="text-sm font-medium text-slate-800">子ども・教育費</h3>
-                                <button type="button" onclick="addChild()" class="text-xs font-medium text-primary-600 hover:text-primary-700 bg-primary-50 px-2 py-1 rounded">
+                                <button type="button" onclick="addChild()"
+                                    class="text-xs font-medium text-primary-600 hover:text-primary-700 bg-primary-50 px-2 py-1 rounded">
                                     + 子どもを追加
                                 </button>
                             </div>
-                            
+
                             <div id="children-container" class="space-y-4">
                                 <!-- Child 1 (Default) -->
                                 <div class="child-entry p-3 border border-slate-200 rounded-lg bg-white relative">
-                                    <button type="button" onclick="removeChild(this)" class="absolute top-2 right-2 text-slate-400 hover:text-red-500" title="削除">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                    <button type="button" onclick="removeChild(this)"
+                                        class="absolute top-2 right-2 text-slate-400 hover:text-red-500" title="削除">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M6 18L18 6M6 6l12 12"></path>
+                                        </svg>
                                     </button>
                                     <div class="grid grid-cols-2 gap-3 pr-6">
                                         <div>
-                                            <label class="block text-xs text-slate-500 mb-1">現在の年齢 (0=今年誕生, マイナス=未来)</label>
-                                            <input type="number" class="child-age input-field block w-full rounded-md border-slate-300 shadow-sm sm:text-sm" value="0">
+                                            <label class="block text-xs text-slate-500 mb-1">現在の年齢 (0=今年誕生,
+                                                マイナス=未来)</label>
+                                            <input type="number"
+                                                class="child-age input-field block w-full rounded-md border-slate-300 shadow-sm sm:text-sm"
+                                                value="0">
                                         </div>
                                         <div>
                                             <label class="block text-xs text-slate-500 mb-1">進路コース</label>
-                                            <select class="child-course input-field block w-full rounded-md border-slate-300 shadow-sm sm:text-sm">
+                                            <select
+                                                class="child-course input-field block w-full rounded-md border-slate-300 shadow-sm sm:text-sm">
                                                 <option value="public_all">全て公立</option>
                                                 <option value="private_univ" selected>大学のみ私立(文系)</option>
                                                 <option value="private_high_univ">高校・大学私立</option>
@@ -348,7 +458,8 @@
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-5">
                         <h3 class="text-sm font-medium text-slate-500">65歳時の予想総資産</h3>
-                        <p class="text-3xl font-bold text-slate-800 mt-2" id="summary-asset-65">--- <span class="text-lg font-normal text-slate-500">万円</span></p>
+                        <p class="text-3xl font-bold text-slate-800 mt-2" id="summary-asset-65">--- <span
+                                class="text-lg font-normal text-slate-500">万円</span></p>
                     </div>
                     <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-5">
                         <h3 class="text-sm font-medium text-slate-500">資産枯渇年齢</h3>
@@ -356,7 +467,8 @@
                     </div>
                     <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-5">
                         <h3 class="text-sm font-medium text-slate-500">必要保障額（現在）</h3>
-                        <p class="text-3xl font-bold text-orange-600 mt-2" id="summary-insurance">--- <span class="text-lg font-normal text-slate-500">万円</span></p>
+                        <p class="text-3xl font-bold text-orange-600 mt-2" id="summary-insurance">--- <span
+                                class="text-lg font-normal text-slate-500">万円</span></p>
                     </div>
                 </div>
 
@@ -365,13 +477,16 @@
                     <div class="flex justify-between items-center mb-4">
                         <h2 class="text-lg font-bold text-slate-800">資産と収支の推移</h2>
                         <div class="flex space-x-2">
-                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                            <span
+                                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
                                 資産額
                             </span>
-                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800">
+                            <span
+                                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800">
                                 年間収入
                             </span>
-                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-rose-100 text-rose-800">
+                            <span
+                                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-rose-100 text-rose-800">
                                 年間支出
                             </span>
                         </div>
@@ -390,21 +505,25 @@
                             <canvas id="pieChart"></canvas>
                         </div>
                     </div>
-                    
+
                     <!-- Major Events Timeline / Warnings -->
-                    <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 overflow-hidden flex flex-col">
+                    <div
+                        class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 overflow-hidden flex flex-col">
                         <h2 class="text-lg font-bold text-slate-800 mb-4">ライフイベント＆アラート</h2>
                         <div class="flex-1 overflow-y-auto pr-2 custom-scrollbar">
-                            <ul class="space-y-4 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-slate-300 before:to-transparent" id="events-list">
+                            <ul class="space-y-4 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-slate-300 before:to-transparent"
+                                id="events-list">
                                 <!-- Events will be generated here by JS -->
-                                <li class="text-slate-500 text-sm italic text-center py-10 z-10 relative bg-white">シミュレーションを実行してください</li>
+                                <li class="text-slate-500 text-sm italic text-center py-10 z-10 relative bg-white">
+                                    シミュレーションを実行してください</li>
                             </ul>
                         </div>
                     </div>
                 </div>
 
                 <!-- Data Table (Hidden by default, used for export mostly, or toggleable) -->
-                <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden mt-6 hidden" id="data-table-section">
+                <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden mt-6 hidden"
+                    id="data-table-section">
                     <div class="px-6 py-4 border-b border-slate-100 bg-slate-50 flex justify-between items-center">
                         <h2 class="text-lg font-semibold text-slate-800">詳細データ表</h2>
                     </div>
@@ -440,4 +559,5 @@
     <script src="js/app.js"></script>
     <script src="js/export.js"></script>
 </body>
+
 </html>

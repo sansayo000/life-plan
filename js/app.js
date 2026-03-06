@@ -6,23 +6,23 @@ let simData = []; // Array to store year-by-year simulation results
 // Constants for calculations
 const EDUCATION_COSTS = {
     // Cumulative costs per year approximately (simplified model in Man-Yen)
-    'public_all': { 0:0, 3:30, 4:30, 5:30, 6:30, 7:30, 8:30, 9:30, 10:30, 11:30, 12:45, 13:45, 14:45, 15:45, 16:45, 17:45, 18:60, 19:60, 20:60, 21:60 },
-    'private_univ': { 0:0, 3:30, 4:30, 5:30, 6:30, 7:30, 8:30, 9:30, 10:30, 11:30, 12:45, 13:45, 14:45, 15:45, 16:45, 17:45, 18:150, 19:150, 20:150, 21:150 },
-    'private_high_univ': { 0:0, 3:30, 4:30, 5:30, 6:30, 7:30, 8:30, 9:30, 10:30, 11:30, 12:45, 13:45, 14:45, 15:100, 16:100, 17:100, 18:150, 19:150, 20:150, 21:150 },
-    'private_all': { 0:0, 3:60, 4:60, 5:60, 6:100, 7:100, 8:100, 9:100, 10:100, 11:100, 12:120, 13:120, 14:120, 15:100, 16:100, 17:100, 18:150, 19:150, 20:150, 21:150 },
+    'public_all': { 0: 0, 3: 30, 4: 30, 5: 30, 6: 30, 7: 30, 8: 30, 9: 30, 10: 30, 11: 30, 12: 45, 13: 45, 14: 45, 15: 45, 16: 45, 17: 45, 18: 60, 19: 60, 20: 60, 21: 60 },
+    'private_univ': { 0: 0, 3: 30, 4: 30, 5: 30, 6: 30, 7: 30, 8: 30, 9: 30, 10: 30, 11: 30, 12: 45, 13: 45, 14: 45, 15: 45, 16: 45, 17: 45, 18: 150, 19: 150, 20: 150, 21: 150 },
+    'private_high_univ': { 0: 0, 3: 30, 4: 30, 5: 30, 6: 30, 7: 30, 8: 30, 9: 30, 10: 30, 11: 30, 12: 45, 13: 45, 14: 45, 15: 100, 16: 100, 17: 100, 18: 150, 19: 150, 20: 150, 21: 150 },
+    'private_all': { 0: 0, 3: 60, 4: 60, 5: 60, 6: 100, 7: 100, 8: 100, 9: 100, 10: 100, 11: 100, 12: 120, 13: 120, 14: 120, 15: 100, 16: 100, 17: 100, 18: 150, 19: 150, 20: 150, 21: 150 },
 };
 
 // UI Interaction Functions
 function toggleSection(contentId) {
     const content = document.getElementById(contentId);
     const icon = document.getElementById(contentId.replace('content', 'icon'));
-    
+
     if (content.classList.contains('hidden')) {
         content.classList.remove('hidden');
-        if(icon) icon.classList.remove('rotate-180');
+        if (icon) icon.classList.remove('rotate-180');
     } else {
         content.classList.add('hidden');
-        if(icon) icon.classList.add('rotate-180');
+        if (icon) icon.classList.add('rotate-180');
     }
 }
 
@@ -30,7 +30,7 @@ function toggleSpouseInputs() {
     const isChecked = document.getElementById('has-spouse').checked;
     const spouseInputs = document.getElementById('spouse-inputs');
     const inputs = spouseInputs.querySelectorAll('input');
-    
+
     if (isChecked) {
         spouseInputs.classList.remove('hidden');
         setTimeout(() => spouseInputs.classList.remove('opacity-50'), 10);
@@ -47,7 +47,7 @@ function toggleSpouseInputs() {
         });
     }
     // Auto-calculate on toggle if data exists
-    if(simData.length > 0) calculateSimulation();
+    if (simData.length > 0) calculateSimulation();
 }
 
 function toggleHousingType() {
@@ -59,8 +59,8 @@ function toggleHousingType() {
     if (type === 'rent') document.getElementById('housing-rent').classList.remove('hidden');
     if (type === 'mortgage') document.getElementById('housing-mortgage').classList.remove('hidden');
     if (type === 'buy_future') document.getElementById('housing-buy-future').classList.remove('hidden');
-    
-    if(simData.length > 0) calculateSimulation();
+
+    if (simData.length > 0) calculateSimulation();
 }
 
 function addChild() {
@@ -88,12 +88,12 @@ function addChild() {
         </div>
     `;
     container.insertAdjacentHTML('beforeend', childHtml);
-    if(simData.length > 0) calculateSimulation();
+    if (simData.length > 0) calculateSimulation();
 }
 
 function removeChild(btn) {
     btn.closest('.child-entry').remove();
-    if(simData.length > 0) calculateSimulation();
+    if (simData.length > 0) calculateSimulation();
 }
 
 // Event Listeners for real-time updates
@@ -111,11 +111,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const input = document.getElementById(inputId);
         slider.addEventListener('input', (e) => {
             input.value = e.target.value;
-            if(simData.length > 0) calculateSimulation();
+            if (simData.length > 0) calculateSimulation();
         });
         input.addEventListener('change', (e) => {
             slider.value = e.target.value;
-            if(simData.length > 0) calculateSimulation();
+            if (simData.length > 0) calculateSimulation();
         });
     };
 
@@ -127,12 +127,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const btn = document.getElementById('btn-calculate');
         btn.innerHTML = '<span class="mr-2">計算中...</span>';
         btn.classList.add('opacity-75');
-        
+
         setTimeout(() => { // small delay for UI feedback
             calculateSimulation();
             btn.innerHTML = 'シミュレーション実行';
             btn.classList.remove('opacity-75');
-            
+
             // Show data table
             document.getElementById('data-table-section').classList.remove('hidden');
         }, 50);
@@ -146,7 +146,7 @@ document.addEventListener('DOMContentLoaded', () => {
 function getInputs() {
     // Helper to get float
     const getVal = (id) => parseFloat(document.getElementById(id).value) || 0;
-    
+
     // Children parsing
     const children = Array.from(document.querySelectorAll('.child-entry')).map(entry => ({
         age: parseInt(entry.querySelector('.child-age').value) || 0,
@@ -159,37 +159,38 @@ function getInputs() {
         simYears: parseInt(getVal('sim-years')),
         incomeMain: getVal('income-main'),
         incomeGrowth: getVal('income-growth') / 100,
-        
+
         // Spouse
         hasSpouse: document.getElementById('has-spouse').checked,
         spouseAge: parseInt(getVal('spouse-age')),
         incomeSpouse: getVal('income-spouse'),
-        
+        incomeGrowthSpouse: getVal('income-growth-spouse') / 100,
+
         // Assets & Scenarios
         savings: getVal('current-savings'),
         investment: getVal('current-investments'),
         yield: getVal('investment-yield') / 100,
         inflation: getVal('inflation-rate') / 100,
-        
+
         // Expenses
         livingVar: getVal('living-expense') * 12, // Annual
         housingType: document.getElementById('housing-type').value,
-        
+
         // Rent
         rent: getVal('rent-expense') * 12,
-        
+
         // Mortgage
         mortgageBal: getVal('mortgage-balance'),
         mortgageYears: getVal('mortgage-years'),
         mortgageRate: getVal('mortgage-rate') / 100,
-        
+
         // Future Buy
         buyAge: getVal('buy-age'),
         buyPrice: getVal('buy-price'),
         buyDown: getVal('buy-downpayment'),
         buyRate: getVal('buy-rate') / 100,
         buyCurrentRent: getVal('buy-current-rent') * 12,
-        
+
         children: children
     };
 }
@@ -198,7 +199,7 @@ function getInputs() {
 function calcYearlyMortgage(principal, years, annualRate) {
     if (principal <= 0 || years <= 0) return 0;
     if (annualRate === 0) return principal / years;
-    
+
     const monthlyRate = annualRate / 12;
     const months = years * 12;
     const monthlyPayment = principal * (monthlyRate * Math.pow(1 + monthlyRate, months)) / (Math.pow(1 + monthlyRate, months) - 1);
@@ -209,12 +210,12 @@ function calculateSimulation() {
     const inputs = getInputs();
     simData = []; // clear global
     let events = [];
-    
+
     let currentAge = inputs.age;
     let savings = inputs.savings;
     let investment = inputs.investment;
     let mortgageBalance = inputs.housingType === 'mortgage' ? inputs.mortgageBal : 0;
-    
+
     // Future buy state tracking
     let hasBoughtHouse = false;
     let futureMortgageYears = 35; // default 35 years for future buy
@@ -236,18 +237,18 @@ function calculateSimulation() {
     for (let i = 0; i <= inputs.simYears; i++) {
         let yearAge = currentAge + i;
         let inflationMultiplier = Math.pow(1 + inputs.inflation, i);
-        
+
         // --- Income ---
         // Retirement assumption: 65. Pension rough estimate after 65 (placeholder logic)
         let incomeRatio = yearAge < 65 ? Math.pow(1 + inputs.incomeGrowth, i) : 0;
         let incomeM = yearAge < 65 ? inputs.incomeMain * incomeRatio : 200 * inflationMultiplier; // 200man pension placeholder
-        
+
         let sAge = inputs.spouseAge + i;
         let incomeS = 0;
-        if(inputs.hasSpouse) {
-             incomeS = sAge < 65 ? inputs.incomeSpouse * Math.pow(1 + inputs.incomeGrowth, i) : 100 * inflationMultiplier; // 100man pension spouse
+        if (inputs.hasSpouse) {
+            incomeS = sAge < 65 ? inputs.incomeSpouse * Math.pow(1 + inputs.incomeGrowthSpouse, i) : 100 * inflationMultiplier; // 100man pension spouse
         }
-        
+
         let totalIncome = incomeM + incomeS;
 
         // --- Expenses ---
@@ -274,8 +275,8 @@ function calculateSimulation() {
                 // Year of purchase
                 hasBoughtHouse = true;
                 expHousing = inputs.buyDown;
-                events.push({age: yearAge, text: `住宅購入: 頭金 ${Math.round(expHousing)}万円`, type: 'event'});
-                
+                events.push({ age: yearAge, text: `住宅購入: 頭金 ${Math.round(expHousing)}万円`, type: 'event' });
+
                 let principal = inputs.buyPrice - inputs.buyDown;
                 mortgageBalance = principal;
                 futureMortgagePayment = calcYearlyMortgage(principal, futureMortgageYears, inputs.buyRate);
@@ -300,16 +301,16 @@ function calculateSimulation() {
             if (childAge >= 0 && childAge <= 22) { // Univ ends at 22 approx
                 let costMap = EDUCATION_COSTS[child.course];
                 // Find nearest age cost (simplified)
-                let cost = costMap[childAge] || (costMap[Math.floor(childAge/3)*3] || 0); 
+                let cost = costMap[childAge] || (costMap[Math.floor(childAge / 3) * 3] || 0);
                 if (childAge > 22) cost = 0;
-                
+
                 let adjustedCost = cost * inflationMultiplier;
                 expEdu += adjustedCost;
-                
+
                 // Events
-                if(childAge === 6 && i > 0) events.push({age: yearAge, text: `第${index+1}子 小学校入学`, type: 'edu'});
-                if(childAge === 15 && i > 0) events.push({age: yearAge, text: `第${index+1}子 高校入学`, type: 'edu'});
-                if(childAge === 18 && i > 0) events.push({age: yearAge, text: `第${index+1}子 大学入学`, type: 'edu'});
+                if (childAge === 6 && i > 0) events.push({ age: yearAge, text: `第${index + 1}子 小学校入学`, type: 'edu' });
+                if (childAge === 15 && i > 0) events.push({ age: yearAge, text: `第${index + 1}子 高校入学`, type: 'edu' });
+                if (childAge === 18 && i > 0) events.push({ age: yearAge, text: `第${index + 1}子 大学入学`, type: 'edu' });
             }
         });
         totalEdu += expEdu;
@@ -317,8 +318,8 @@ function calculateSimulation() {
         // 4. Events / Others Placeholder (Car buy every 10 years after 30)
         let expOther = 0;
         if (yearAge % 10 === 0 && yearAge >= 30 && yearAge <= 70) {
-           expOther = 300 * inflationMultiplier;
-           events.push({age: yearAge, text: `車の買い替え等の一時費用 (${Math.round(expOther)}万円)`, type: 'other'});
+            expOther = 300 * inflationMultiplier;
+            events.push({ age: yearAge, text: `車の買い替え等の一時費用 (${Math.round(expOther)}万円)`, type: 'other' });
         }
         totalOthers += expOther;
 
@@ -331,10 +332,10 @@ function calculateSimulation() {
 
         // --- Balance & Assets ---
         let balance = totalIncome - totalExpense;
-        
+
         // Investment yield applied to previous year balance
         let investmentReturn = investment * inputs.yield;
-        
+
         // Simple strategy: invest 50% of positive balance, draw from savings then investments if negative
         if (balance > 0) {
             savings += balance * 0.5;
@@ -355,7 +356,7 @@ function calculateSimulation() {
 
         if (netWorth < 0 && !depletionAge) {
             depletionAge = yearAge;
-            events.push({age: yearAge, text: `🔥 資産が枯渇する見込みです`, type: 'alert'});
+            events.push({ age: yearAge, text: `🔥 資産が枯渇する見込みです`, type: 'alert' });
         }
 
         simData.push({
@@ -380,7 +381,7 @@ function calculateSimulation() {
 function updateSummaryUI(data, events, depletionAge, peakExpenseAge, peakExpense) {
     // 65yo Asset
     const age65Data = data.find(d => d.age === 65);
-    const asset65 = age65Data ? age65Data.netWorth : data[data.length-1].netWorth;
+    const asset65 = age65Data ? age65Data.netWorth : data[data.length - 1].netWorth;
     document.getElementById('summary-asset-65').innerHTML = `${Math.round(asset65).toLocaleString()}<span class="text-lg font-normal text-slate-500"> 万円</span>`;
 
     // Depletion
@@ -401,17 +402,17 @@ function updateSummaryUI(data, events, depletionAge, peakExpenseAge, peakExpense
     document.getElementById('summary-insurance').innerHTML = `${Math.round(requiredInsurance).toLocaleString()}<span class="text-lg font-normal text-slate-500"> 万円</span>`;
 
     // Events List
-    const limitEvents = events.sort((a,b) => a.age - b.age);
+    const limitEvents = events.sort((a, b) => a.age - b.age);
     // Add peak expense event
-    limitEvents.push({age: peakExpenseAge, text: `支出ピーク予想 (${Math.round(peakExpense)}万円/年)`, type: 'alert'});
-    
+    limitEvents.push({ age: peakExpenseAge, text: `支出ピーク予想 (${Math.round(peakExpense)}万円/年)`, type: 'alert' });
+
     // Deduplicate and re-sort
-    const uniqueEvents = limitEvents.filter((v, i, a) => a.findIndex(t => (t.age === v.age && t.text === v.text)) === i).sort((a,b) => a.age - b.age);
+    const uniqueEvents = limitEvents.filter((v, i, a) => a.findIndex(t => (t.age === v.age && t.text === v.text)) === i).sort((a, b) => a.age - b.age);
 
     const eventsHtml = uniqueEvents.map(e => {
         let colorClass = 'bg-blue-500';
-        if(e.type === 'alert') colorClass = 'bg-rose-500';
-        if(e.type === 'edu') colorClass = 'bg-amber-500';
+        if (e.type === 'alert') colorClass = 'bg-rose-500';
+        if (e.type === 'edu') colorClass = 'bg-amber-500';
 
         return `
             <li class="relative pl-6 py-2">
@@ -423,19 +424,19 @@ function updateSummaryUI(data, events, depletionAge, peakExpenseAge, peakExpense
             </li>
         `;
     }).join('');
-    
+
     document.getElementById('events-list').innerHTML = eventsHtml || '<li class="text-slate-500 text-sm italic py-4">特筆すべきイベントはありません</li>';
 }
 
 function drawMainChart(data) {
     const ctx = document.getElementById('mainChart').getContext('2d');
-    
+
     if (myChart) {
         myChart.destroy();
     }
 
     const labels = data.map(d => d.age + '歳');
-    
+
     myChart = new Chart(ctx, {
         type: 'line',
         data: {
@@ -478,7 +479,7 @@ function drawMainChart(data) {
                 legend: { display: false },
                 tooltip: {
                     callbacks: {
-                        label: function(context) {
+                        label: function (context) {
                             let label = context.dataset.label || '';
                             if (label) label += ': ';
                             if (context.parsed.y !== null) label += new Intl.NumberFormat('ja-JP').format(Math.round(context.parsed.y)) + '万円';
@@ -494,7 +495,7 @@ function drawMainChart(data) {
                     position: 'left',
                     title: { display: true, text: '資産残高 (万円)' },
                     ticks: {
-                        callback: function(value) { return value.toLocaleString(); }
+                        callback: function (value) { return value.toLocaleString(); }
                     }
                 },
                 y1: {
@@ -504,7 +505,7 @@ function drawMainChart(data) {
                     title: { display: true, text: '年間収支 (万円)' },
                     grid: { drawOnChartArea: false }, // only want the grid lines for one axis to show up
                     ticks: {
-                        callback: function(value) { return value.toLocaleString(); }
+                        callback: function (value) { return value.toLocaleString(); }
                     }
                 }
             }
@@ -514,7 +515,7 @@ function drawMainChart(data) {
 
 function drawPieChart(living, housing, edu, other) {
     const ctx = document.getElementById('pieChart').getContext('2d');
-    
+
     if (expensePieChart) {
         expensePieChart.destroy();
     }
@@ -542,7 +543,7 @@ function drawPieChart(living, housing, edu, other) {
                 legend: { position: 'bottom' },
                 tooltip: {
                     callbacks: {
-                        label: function(context) {
+                        label: function (context) {
                             let val = context.parsed;
                             let total = context.dataset.data.reduce((a, b) => a + b, 0);
                             let percent = Math.round((val / total) * 100);
@@ -559,7 +560,7 @@ function drawPieChart(living, housing, edu, other) {
 function updateDataTable(data) {
     const tbody = document.getElementById('data-table-body');
     let html = '';
-    
+
     data.forEach((row, i) => {
         // Show every year or maybe every 5 years to save space? Let's show every 5 for the table by default to keep DOM light, unless it's the specific export.
         if (i === 0 || i === data.length - 1 || row.age % 5 === 0) {
@@ -574,7 +575,7 @@ function updateDataTable(data) {
             `;
         }
     });
-    
+
     // Note at bottom
     html += `<tr><td colspan="5" class="px-4 py-2 text-xs text-center text-slate-400">※表示は5年ごとの抜粋です。全データはExcel出力で確認できます。</td></tr>`;
     tbody.innerHTML = html;
@@ -584,7 +585,7 @@ function updateDataTable(data) {
 function saveData(inputs) {
     try {
         localStorage.setItem('lifePlanData', JSON.stringify(inputs));
-    } catch(e) {
+    } catch (e) {
         console.log('Unable to save to localStorage', e);
     }
 }
@@ -600,14 +601,14 @@ function loadData() {
             document.getElementById('income-main').value = data.incomeMain;
             document.getElementById('current-savings').value = data.savings;
             // Execute once loaded if data seems valid
-            if(data.age) {
-               calculateSimulation();
+            if (data.age) {
+                calculateSimulation();
             }
         } else {
             // Initial calc for default values
             calculateSimulation();
         }
-    } catch(e) {
+    } catch (e) {
         console.log('Error loading data', e);
         calculateSimulation();
     }
