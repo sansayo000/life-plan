@@ -3,13 +3,21 @@ let myChart = null;
 let expensePieChart = null;
 let simData = []; // Array to store year-by-year simulation results
 
-// Constants for calculations
-const EDUCATION_COSTS = {
-    // Cumulative costs per year approximately (simplified model in Man-Yen)
-    'public_all': { 0: 0, 3: 30, 4: 30, 5: 30, 6: 30, 7: 30, 8: 30, 9: 30, 10: 30, 11: 30, 12: 45, 13: 45, 14: 45, 15: 45, 16: 45, 17: 45, 18: 60, 19: 60, 20: 60, 21: 60 },
-    'private_univ': { 0: 0, 3: 30, 4: 30, 5: 30, 6: 30, 7: 30, 8: 30, 9: 30, 10: 30, 11: 30, 12: 45, 13: 45, 14: 45, 15: 45, 16: 45, 17: 45, 18: 150, 19: 150, 20: 150, 21: 150 },
-    'private_high_univ': { 0: 0, 3: 30, 4: 30, 5: 30, 6: 30, 7: 30, 8: 30, 9: 30, 10: 30, 11: 30, 12: 45, 13: 45, 14: 45, 15: 100, 16: 100, 17: 100, 18: 150, 19: 150, 20: 150, 21: 150 },
-    'private_all': { 0: 0, 3: 60, 4: 60, 5: 60, 6: 100, 7: 100, 8: 100, 9: 100, 10: 100, 11: 100, 12: 120, 13: 120, 14: 120, 15: 100, 16: 100, 17: 100, 18: 150, 19: 150, 20: 150, 21: 150 },
+const DETAILED_EDUCATION_COSTS = {
+    nursery: { public: 20, private: 50 },     // Age 3-5 (approx annual cost in Man-Yen)
+    elementary: { public: 35, private: 160 }, // Age 6-11
+    junior_high: { public: 50, private: 140 },// Age 12-14
+    high_school: { public: 50, private: 100 },// Age 15-17
+    university: {
+        national: 100, // 国公立
+        private_humanities: 150, // 私立文系
+        private_science: 200 // 私立理系
+    }, // Age 18-21
+    grad_school: {
+        none: 0,
+        national: 100, // 国公立
+        private: 150 // 私立
+    } // Age 22-23
 };
 
 // UI Interaction Functions
@@ -93,22 +101,57 @@ function toggleHousingType() {
 function addChild() {
     const container = document.getElementById('children-container');
     const childHtml = `
-        <div class="child-entry p-3 border border-slate-200 rounded-lg bg-white relative mt-3">
-            <button type="button" onclick="removeChild(this)" class="absolute top-2 right-2 text-slate-400 hover:text-red-500" title="削除">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        <div class="child-entry p-4 border border-slate-200 rounded-lg bg-white relative mt-3 shadow-sm">
+            <button type="button" onclick="removeChildEntry(this)" class="absolute top-3 right-3 text-slate-400 hover:text-rose-500 transition-colors" title="削除">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
             </button>
-            <div class="grid grid-cols-2 gap-3 pr-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pr-6 mt-2">
                 <div>
-                    <label class="block text-xs text-slate-500 mb-1">現在の年齢 (0=今年誕生)</label>
-                    <input type="number" class="child-age input-field block w-full rounded-md border-slate-300 shadow-sm sm:text-sm" value="0">
+                    <label class="block text-xs font-medium text-slate-700 mb-1">現在の年齢</label>
+                    <input type="number" class="child-age input-field block w-full rounded-md border-slate-300 shadow-sm sm:text-sm focus:border-primary-500 focus:ring-primary-500" value="0" min="0" max="25">
                 </div>
                 <div>
-                    <label class="block text-xs text-slate-500 mb-1">進路コース</label>
-                    <select class="child-course input-field block w-full rounded-md border-slate-300 shadow-sm sm:text-sm">
-                        <option value="public_all">全て公立</option>
-                        <option value="private_univ" selected>大学のみ私立(文系)</option>
-                        <option value="private_high_univ">高校・大学私立</option>
-                        <option value="private_all">全て私立</option>
+                    <label class="block text-xs font-medium text-slate-700 mb-1">保育園/幼稚園</label>
+                    <select class="child-nursery input-field block w-full rounded-md border-slate-300 shadow-sm sm:text-sm">
+                        <option value="public">公立</option>
+                        <option value="private">私立</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-700 mb-1">小学校</label>
+                    <select class="child-elementary input-field block w-full rounded-md border-slate-300 shadow-sm sm:text-sm">
+                        <option value="public">公立</option>
+                        <option value="private">私立</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-700 mb-1">中学校</label>
+                    <select class="child-junior input-field block w-full rounded-md border-slate-300 shadow-sm sm:text-sm">
+                        <option value="public">公立</option>
+                        <option value="private">私立</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-700 mb-1">高校</label>
+                    <select class="child-high input-field block w-full rounded-md border-slate-300 shadow-sm sm:text-sm">
+                        <option value="public">公立</option>
+                        <option value="private">私立</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-700 mb-1">大学等</label>
+                    <select class="child-univ input-field block w-full rounded-md border-slate-300 shadow-sm sm:text-sm">
+                        <option value="national">国公立</option>
+                        <option value="private_humanities" selected>私立(文系)</option>
+                        <option value="private_science">私立(理系)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-700 mb-1">大学院</label>
+                    <select class="child-grad input-field block w-full rounded-md border-slate-300 shadow-sm sm:text-sm">
+                        <option value="none" selected>なし</option>
+                        <option value="national">国公立</option>
+                        <option value="private">私立</option>
                     </select>
                 </div>
             </div>
@@ -118,19 +161,255 @@ function addChild() {
     if (simData.length > 0) calculateSimulation();
 }
 
-function removeChild(btn) {
+function removeChildEntry(btn) {
     btn.closest('.child-entry').remove();
     if (simData.length > 0) calculateSimulation();
 }
 
+function addCustomEvent() {
+    const container = document.getElementById('custom-events-container');
+    const eventHtml = `
+        <div class="custom-event-entry p-3 border border-slate-200 rounded-lg bg-white relative shadow-sm flex flex-wrap gap-3 items-end">
+            <button type="button" onclick="removeCustomEvent(this)" class="absolute top-2 right-2 text-slate-400 hover:text-rose-500 transition-colors" title="削除">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            <div class="w-24">
+                <label class="block text-xs font-medium text-slate-700 mb-1">発生年齢</label>
+                <div class="relative">
+                    <input type="number" class="event-age input-field block w-full rounded-md border-slate-300 shadow-sm sm:text-sm pr-6" value="35" min="0" max="100">
+                    <span class="absolute inset-y-0 right-0 pr-2 flex items-center text-xs text-slate-500">歳</span>
+                </div>
+            </div>
+            <div class="w-32">
+                <label class="block text-xs font-medium text-slate-700 mb-1">費用</label>
+                <div class="relative">
+                    <input type="number" class="event-cost input-field block w-full rounded-md border-slate-300 shadow-sm sm:text-sm pr-8" value="100" min="0">
+                    <span class="absolute inset-y-0 right-0 pr-2 flex items-center text-xs text-slate-500">万円</span>
+                </div>
+            </div>
+            <div class="flex-1 min-w-[150px]">
+                <label class="block text-xs font-medium text-slate-700 mb-1">イベント名</label>
+                <input type="text" class="event-name input-field block w-full rounded-md border-slate-300 shadow-sm sm:text-sm" value="マイカー購入" placeholder="例: 車の購入">
+            </div>
+        </div>
+    `;
+    container.insertAdjacentHTML('beforeend', eventHtml);
+    if (simData.length > 0) calculateSimulation();
+}
+
+function removeCustomEvent(btn) {
+    btn.closest('.custom-event-entry').remove();
+    if (simData.length > 0) calculateSimulation();
+}
+
+// --- Mortgage Real-time UI & Logic ---
+function calcMonthlyMortgage(principal, months, annualRate) {
+    if (principal <= 0 || months <= 0) return 0;
+    if (annualRate === 0) return principal / months;
+    const monthlyRate = annualRate / 12;
+    return principal * (monthlyRate * Math.pow(1 + monthlyRate, months)) / (Math.pow(1 + monthlyRate, months) - 1);
+}
+
+function calcMortgageLifecycle(bal, years, type, method, initRate, rateEvents) {
+    let months = years * 12;
+    let balance = bal;
+    let totalPaid = 0;
+    let firstMonthPayment = 0;
+    let currentAnnualRate = initRate;
+    let fixedPrincipalPayment = bal / months;
+
+    for (let m = 1; m <= months; m++) {
+        if (type === 'variable') {
+            const yearIndex = Math.floor((m - 1) / 12) + 1;
+            for (const ev of rateEvents) {
+                if (ev.years === yearIndex - 1 && (m - 1) % 12 === 0) {
+                    currentAnnualRate = ev.rate;
+                }
+            }
+        }
+
+        let currentMonthlyRate = currentAnnualRate / 12;
+        let interest = balance * currentMonthlyRate;
+        let payment = 0;
+        let principalPayment = 0;
+
+        if (method === 'equal_pi') {
+            payment = calcMonthlyMortgage(balance, months - m + 1, currentAnnualRate);
+            principalPayment = payment - interest;
+        } else {
+            principalPayment = fixedPrincipalPayment;
+            payment = principalPayment + interest;
+        }
+
+        if (m === 1) firstMonthPayment = payment;
+
+        balance -= principalPayment;
+        totalPaid += payment;
+        if (balance <= 0) break;
+    }
+    return { firstMonth: firstMonthPayment, total: totalPaid };
+}
+
+function getYearlyMortgagePayments(bal, years, type, method, initRate, rateEvents) {
+    let months = years * 12;
+    let balance = bal;
+    let currentAnnualRate = initRate;
+    let yearlyPayments = Array(years).fill(0);
+    let yearlyBalances = Array(years).fill(0);
+    let fixedPrincipalPayment = bal / months;
+
+    for (let m = 1; m <= months; m++) {
+        let yearIndex = Math.floor((m - 1) / 12);
+
+        if (type === 'variable') {
+            for (const ev of rateEvents) {
+                if (ev.years === yearIndex && (m - 1) % 12 === 0) {
+                    currentAnnualRate = ev.rate;
+                }
+            }
+        }
+
+        let currentMonthlyRate = currentAnnualRate / 12;
+        let interest = balance * currentMonthlyRate;
+        let payment = 0;
+        let principalPayment = 0;
+
+        if (method === 'equal_pi') {
+            payment = calcMonthlyMortgage(balance, months - m + 1, currentAnnualRate);
+            principalPayment = payment - interest;
+        } else {
+            principalPayment = fixedPrincipalPayment;
+            payment = principalPayment + interest;
+        }
+
+        balance -= principalPayment;
+        yearlyPayments[yearIndex] += payment;
+
+        if (m % 12 === 0 || balance <= 0) {
+            if (yearlyBalances[yearIndex] === 0) {
+                yearlyBalances[yearIndex] = Math.max(0, balance);
+            }
+        }
+
+        if (balance <= 0) {
+            for (let i = yearIndex; i < years; i++) {
+                if (yearlyBalances[i] === undefined || yearlyBalances[i] === 0 && i > yearIndex) {
+                    yearlyBalances[i] = 0;
+                }
+            }
+            break;
+        }
+    }
+    return { payments: yearlyPayments, balances: yearlyBalances };
+}
+
+function toggleMortgageUI() {
+    const type = document.getElementById('mortgage-interest-type').value;
+    document.getElementById('mortgage-variable-events').classList.toggle('hidden', type !== 'variable');
+    calculateRealtimeMortgage();
+    if (typeof simData !== 'undefined' && simData.length > 0) calculateSimulation();
+}
+
+function toggleBuyUI() {
+    const type = document.getElementById('buy-interest-type').value;
+    document.getElementById('buy-variable-events').classList.toggle('hidden', type !== 'variable');
+    calculateRealtimeBuy();
+    if (typeof simData !== 'undefined' && simData.length > 0) calculateSimulation();
+}
+
+function calculateRealtimeMortgage() {
+    const bal = parseFloat(document.getElementById('mortgage-balance').value) || 0;
+    const years = parseInt(document.getElementById('mortgage-years').value) || 0;
+    const type = document.getElementById('mortgage-interest-type').value;
+    const method = document.getElementById('mortgage-repayment-method').value;
+    const rate = (parseFloat(document.getElementById('mortgage-rate').value) || 0) / 100;
+    const events = Array.from(document.querySelectorAll('#mortgage-variable-events-container .mortgage-rate-entry')).map(entry => ({
+        years: parseInt(entry.querySelector('.rate-years').value) || 0,
+        rate: (parseFloat(entry.querySelector('.rate-value').value) || 0) / 100
+    })).sort((a, b) => a.years - b.years);
+
+    const res = calcMortgageLifecycle(bal, years, type, method, rate, events);
+    document.getElementById('mortgage-monthly-display').innerText = bal > 0 && years > 0 ? res.firstMonth.toFixed(1) + '万円' : '---万円';
+    document.getElementById('mortgage-total-display').innerText = bal > 0 && years > 0 ? Math.round(res.total) + '万円' : '---万円';
+}
+
+function calculateRealtimeBuy() {
+    const bal = (parseFloat(document.getElementById('buy-price').value) || 0) - (parseFloat(document.getElementById('buy-downpayment').value) || 0);
+    const years = parseInt(document.getElementById('buy-years').value) || 0;
+    const type = document.getElementById('buy-interest-type').value;
+    const method = document.getElementById('buy-repayment-method').value;
+    const rate = (parseFloat(document.getElementById('buy-rate').value) || 0) / 100;
+    const events = Array.from(document.querySelectorAll('#buy-variable-events-container .buy-rate-entry')).map(entry => ({
+        years: parseInt(entry.querySelector('.rate-years').value) || 0,
+        rate: (parseFloat(entry.querySelector('.rate-value').value) || 0) / 100
+    })).sort((a, b) => a.years - b.years);
+
+    const res = calcMortgageLifecycle(bal > 0 ? bal : 0, years, type, method, rate, events);
+    document.getElementById('buy-monthly-display').innerText = bal > 0 && years > 0 ? res.firstMonth.toFixed(1) + '万円' : '---万円';
+    document.getElementById('buy-total-display').innerText = bal > 0 && years > 0 ? Math.round(res.total) + '万円' : '---万円';
+}
+
+function addVariableRateEvent(prefix) {
+    const container = document.getElementById(`${prefix}-variable-events-container`);
+    const eventHtml = `
+        <div class="${prefix}-rate-entry flex items-center gap-2 relative">
+            <input type="number" class="rate-years input-field block w-20 rounded-md border-slate-300 shadow-sm sm:text-sm" value="5" min="1" placeholder="年後">
+            <span class="text-xs text-slate-500">年後に</span>
+            <input type="number" class="rate-value input-field block w-20 rounded-md border-slate-300 shadow-sm sm:text-sm" value="1.5" step="0.1" min="0" placeholder="金利">
+            <span class="text-xs text-slate-500">% に変更</span>
+            <button type="button" onclick="removeVariableRateEvent(this, '${prefix}')" class="text-slate-400 hover:text-rose-500 ml-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+        </div>
+    `;
+    container.insertAdjacentHTML('beforeend', eventHtml);
+
+    const newInputs = container.lastElementChild.querySelectorAll('input');
+    newInputs.forEach(input => {
+        input.addEventListener('input', () => {
+            if (prefix === 'mortgage') calculateRealtimeMortgage();
+            else calculateRealtimeBuy();
+            if (typeof simData !== 'undefined' && simData.length > 0) calculateSimulation();
+        });
+    });
+
+    if (prefix === 'mortgage') calculateRealtimeMortgage();
+    else calculateRealtimeBuy();
+    if (typeof simData !== 'undefined' && simData.length > 0) calculateSimulation();
+}
+
+function removeVariableRateEvent(btn, prefix) {
+    btn.closest(`.${prefix}-rate-entry`).remove();
+    if (prefix === 'mortgage') calculateRealtimeMortgage();
+    else calculateRealtimeBuy();
+    if (typeof simData !== 'undefined' && simData.length > 0) calculateSimulation();
+}
+// --- End Mortgage Real-time ---
+
 // Event Listeners for real-time updates
 document.addEventListener('DOMContentLoaded', () => {
-    // Sync living expense yearly display
-    const livingInput = document.getElementById('living-expense');
+    // Sync living expense yearly display and sum detailed items
+    const livingItems = document.querySelectorAll('.living-item');
+    const livingTotalDisplay = document.getElementById('living-expense-total-display');
+    const livingHiddenInput = document.getElementById('living-expense');
     const livingDisplay = document.getElementById('living-expense-yearly-display');
-    livingInput.addEventListener('input', (e) => {
-        livingDisplay.textContent = `年間: ${e.target.value * 12}万円`;
+
+    const updateLivingTotal = () => {
+        let total = 0;
+        livingItems.forEach(item => {
+            total += parseFloat(item.value) || 0;
+        });
+        livingHiddenInput.value = total;
+        livingTotalDisplay.textContent = total;
+        livingDisplay.textContent = `年間: ${total * 12}万円`;
+    };
+
+    livingItems.forEach(item => {
+        item.addEventListener('input', updateLivingTotal);
+        item.addEventListener('change', updateLivingTotal);
     });
+    // Initialize
+    updateLivingTotal();
 
     // Sync sliders with inputs
     const syncSliderInput = (sliderId, inputId) => {
@@ -167,6 +446,22 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 50);
     });
 
+    // Auto-calculate simulation on any generic input change to provide real-time feedback
+    document.addEventListener('change', (e) => {
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') {
+            if (e.target.id.startsWith('mortgage-')) calculateRealtimeMortgage();
+            if (e.target.id.startsWith('buy-')) calculateRealtimeBuy();
+
+            // Ignore sliders and housing type which have their own listeners
+            if (!e.target.id.includes('slider') && e.target.id !== 'housing-type') {
+                if (simData.length > 0) calculateSimulation();
+            }
+        }
+    });
+
+    calculateRealtimeMortgage();
+    calculateRealtimeBuy();
+
     // Save/Load Data (Auto save on calculate, Auto load on init)
     loadData();
 });
@@ -179,8 +474,36 @@ function getInputs() {
     // Children parsing
     const children = Array.from(document.querySelectorAll('.child-entry')).map(entry => ({
         age: parseInt(entry.querySelector('.child-age').value) || 0,
-        course: entry.querySelector('.child-course').value
+        nursery: entry.querySelector('.child-nursery').value,
+        elementary: entry.querySelector('.child-elementary').value,
+        junior: entry.querySelector('.child-junior').value,
+        high: entry.querySelector('.child-high').value,
+        univ: entry.querySelector('.child-univ').value,
+        grad: entry.querySelector('.child-grad').value
     }));
+
+    const customEvents = Array.from(document.querySelectorAll('.custom-event-entry')).map(entry => ({
+        age: parseInt(entry.querySelector('.event-age').value) || 0,
+        cost: parseFloat(entry.querySelector('.event-cost').value) || 0,
+        name: entry.querySelector('.event-name').value || 'カスタムイベント'
+    }));
+
+    // Detailed living expenses
+    const getLivingItem = (id) => parseFloat(document.getElementById(id).value) || 0;
+    const detailedLiving = {
+        food: getLivingItem('living-food'),
+        daily: getLivingItem('living-daily'),
+        util: getLivingItem('living-util'),
+        comm: getLivingItem('living-comm'),
+        medi: getLivingItem('living-medi'),
+        hobby: getLivingItem('living-hobby'),
+        beauty: getLivingItem('living-beauty'),
+        social: getLivingItem('living-social'),
+        ins: getLivingItem('living-ins'),
+        extraEdu: getLivingItem('living-extra-edu'),
+        trans: getLivingItem('living-trans'),
+        other: getLivingItem('living-other')
+    };
 
     return {
         // Basic
@@ -188,16 +511,24 @@ function getInputs() {
         simYears: parseInt(getVal('sim-years')),
         incomeMain: getVal('income-main'),
         incomeGrowth: getVal('income-growth') / 100,
+        incomeCapAgeMain: parseInt(getVal('income-cap-age-main')) || 60,
+        retirementAgeMain: parseInt(getVal('retirement-age-main')) || 60,
+        shokakuIncomeMain: getVal('shokaku-income-main'),
         pensionStartMain: parseInt(getVal('pension-start-main')) || 65,
         pensionAmountMain: getVal('pension-amount-main'),
+        retirementBonusMain: getVal('retirement-bonus-main'),
 
         // Spouse
         hasSpouse: document.getElementById('has-spouse').checked,
         spouseAge: parseInt(getVal('spouse-age')),
         incomeSpouse: getVal('income-spouse'),
         incomeGrowthSpouse: getVal('income-growth-spouse') / 100,
+        incomeCapAgeSpouse: parseInt(getVal('income-cap-age-spouse')) || 60,
+        retirementAgeSpouse: parseInt(getVal('retirement-age-spouse')) || 60,
+        shokakuIncomeSpouse: getVal('shokaku-income-spouse'),
         pensionStartSpouse: parseInt(getVal('pension-start-spouse')) || 65,
         pensionAmountSpouse: getVal('pension-amount-spouse'),
+        retirementBonusSpouse: getVal('retirement-bonus-spouse'),
 
         // Assets & Scenarios
         savings: getVal('current-savings'),
@@ -217,17 +548,35 @@ function getInputs() {
 
         // Mortgage
         mortgageBal: getVal('mortgage-balance'),
-        mortgageYears: getVal('mortgage-years'),
+        mortgageYears: parseInt(getVal('mortgage-years')) || 25,
+        mortgageInterestType: document.getElementById('mortgage-interest-type').value,
+        mortgageRepaymentMethod: document.getElementById('mortgage-repayment-method').value,
         mortgageRate: getVal('mortgage-rate') / 100,
+        mortgageDeductionApply: document.getElementById('mortgage-deduction-apply') ? document.getElementById('mortgage-deduction-apply').checked : false,
+        mortgageDeductionYears: parseInt(getVal('mortgage-deduction-years')) || 0,
+        mortgageVariableRates: Array.from(document.querySelectorAll('.mortgage-rate-entry')).map(entry => ({
+            years: parseInt(entry.querySelector('.rate-years').value) || 0,
+            rate: parseFloat(entry.querySelector('.rate-value').value) / 100 || 0
+        })).sort((a, b) => a.years - b.years),
 
         // Future Buy
         buyAge: getVal('buy-age'),
         buyPrice: getVal('buy-price'),
         buyDown: getVal('buy-downpayment'),
+        buyInterestType: document.getElementById('buy-interest-type').value,
+        buyRepaymentMethod: document.getElementById('buy-repayment-method').value,
+        buyYears: parseInt(getVal('buy-years')) || 35,
         buyRate: getVal('buy-rate') / 100,
+        buyDeductionApply: document.getElementById('buy-deduction-apply') ? document.getElementById('buy-deduction-apply').checked : false,
         buyCurrentRent: getVal('buy-current-rent') * 12,
+        buyVariableRates: Array.from(document.querySelectorAll('.buy-rate-entry')).map(entry => ({
+            years: parseInt(entry.querySelector('.rate-years').value) || 0,
+            rate: parseFloat(entry.querySelector('.rate-value').value) / 100 || 0
+        })).sort((a, b) => a.years - b.years),
 
-        children: children
+        children: children,
+        customEvents: customEvents,
+        detailedLiving: detailedLiving
     };
 }
 
@@ -261,7 +610,14 @@ function calculateSimulation() {
     let futureMortgagePayment = 0;
 
     // Fixed Mortgage Payment calculation for existing mortgage
-    const existingMortgagePayment = calcYearlyMortgage(inputs.mortgageBal, inputs.mortgageYears, inputs.mortgageRate);
+    const mortgageData = getYearlyMortgagePayments(
+        inputs.mortgageBal, inputs.mortgageYears, inputs.mortgageInterestType,
+        inputs.mortgageRepaymentMethod, inputs.mortgageRate, inputs.mortgageVariableRates
+    );
+    const mortgageYearlyPayments = mortgageData.payments;
+    const mortgageYearlyBalances = mortgageData.balances;
+    let futureBuyYearlyPayments = [];
+    let futureBuyYearlyBalances = [];
 
     // Totals for Pie Chart
     let totalLiving = 0;
@@ -278,14 +634,49 @@ function calculateSimulation() {
         let inflationMultiplier = Math.pow(1 + inputs.inflation, i);
 
         // --- Income ---
-        // Pension is dynamic based on user set ages and amounts
-        let incomeRatio = yearAge < inputs.pensionStartMain ? Math.pow(1 + inputs.incomeGrowth, i) : 0;
-        let incomeM = yearAge < inputs.pensionStartMain ? inputs.incomeMain * incomeRatio : inputs.pensionAmountMain * inflationMultiplier;
+        let incomeM = 0;
+        const peakGrowthYearsM = Math.max(0, inputs.incomeCapAgeMain - currentAge);
+        const peakIncomeM = inputs.incomeMain * Math.pow(1 + inputs.incomeGrowth, peakGrowthYearsM);
+
+        if (yearAge >= inputs.pensionStartMain) {
+            incomeM = inputs.pensionAmountMain * inflationMultiplier;          // ④年金期
+        } else if (yearAge >= inputs.retirementAgeMain) {
+            incomeM = inputs.shokakuIncomeMain;                                // ③嘱託期
+        } else if (yearAge >= inputs.incomeCapAgeMain) {
+            incomeM = peakIncomeM;                                             // ②横ばい期
+        } else {
+            const growthYears = Math.max(0, yearAge - currentAge);
+            incomeM = inputs.incomeMain * Math.pow(1 + inputs.incomeGrowth, growthYears); // ①昇給期
+        }
+
+        // Retirement Bonus Main (定年年齢に発生)
+        if (yearAge === inputs.retirementAgeMain && inputs.retirementBonusMain > 0) {
+            incomeM += inputs.retirementBonusMain * inflationMultiplier;
+            events.push({ age: yearAge, text: `本人退職金受取 (${Math.round(inputs.retirementBonusMain * inflationMultiplier)}万円)`, type: 'event' });
+        }
 
         let sAge = inputs.spouseAge + i;
         let incomeS = 0;
         if (inputs.hasSpouse) {
-            incomeS = sAge < inputs.pensionStartSpouse ? inputs.incomeSpouse * Math.pow(1 + inputs.incomeGrowthSpouse, i) : inputs.pensionAmountSpouse * inflationMultiplier;
+            const peakGrowthYearsS = Math.max(0, inputs.incomeCapAgeSpouse - inputs.spouseAge);
+            const peakIncomeS = inputs.incomeSpouse * Math.pow(1 + inputs.incomeGrowthSpouse, peakGrowthYearsS);
+
+            if (sAge >= inputs.pensionStartSpouse) {
+                incomeS = inputs.pensionAmountSpouse * inflationMultiplier;          // ④年金期
+            } else if (sAge >= inputs.retirementAgeSpouse) {
+                incomeS = inputs.shokakuIncomeSpouse;                                // ③嘱託期
+            } else if (sAge >= inputs.incomeCapAgeSpouse) {
+                incomeS = peakIncomeS;                                             // ②横ばい期
+            } else {
+                const growthYears = Math.max(0, sAge - inputs.spouseAge);
+                incomeS = inputs.incomeSpouse * Math.pow(1 + inputs.incomeGrowthSpouse, growthYears); // ①昇給期
+            }
+
+            // Retirement Bonus Spouse (定年年齢に発生)
+            if (sAge === inputs.retirementAgeSpouse && inputs.retirementBonusSpouse > 0) {
+                incomeS += inputs.retirementBonusSpouse * inflationMultiplier;
+                events.push({ age: sAge, text: `配偶者退職金受取 (${Math.round(inputs.retirementBonusSpouse * inflationMultiplier)}万円)`, type: 'event' });
+            }
         }
 
         let totalIncome = incomeM + incomeS;
@@ -302,8 +693,12 @@ function calculateSimulation() {
             expHousing = inputs.rent * inflationMultiplier;
         } else if (inputs.housingType === 'mortgage') {
             if (i < inputs.mortgageYears) {
-                expHousing = existingMortgagePayment;
-                mortgageBalance -= (existingMortgagePayment - (mortgageBalance * inputs.mortgageRate));
+                expHousing = mortgageYearlyPayments[i] || 0;
+                if (inputs.mortgageDeductionApply && i < inputs.mortgageDeductionYears) {
+                    let endOfYearBal = mortgageYearlyBalances[i] || 0;
+                    let deduction = Math.min(21, endOfYearBal * 0.007);
+                    totalIncome += deduction;
+                }
             } else {
                 expHousing = 20 * inflationMultiplier; // Maint/Tax after paid off (placeholder)
             }
@@ -317,15 +712,29 @@ function calculateSimulation() {
                 events.push({ age: yearAge, text: `住宅購入: 頭金 ${Math.round(expHousing)}万円`, type: 'event' });
 
                 let principal = inputs.buyPrice - inputs.buyDown;
-                mortgageBalance = principal;
-                futureMortgagePayment = calcYearlyMortgage(principal, futureMortgageYears, inputs.buyRate);
-                expHousing += futureMortgagePayment; // Add first year payment
+                const buyMortgageData = getYearlyMortgagePayments(
+                    principal, inputs.buyYears, inputs.buyInterestType,
+                    inputs.buyRepaymentMethod, inputs.buyRate, inputs.buyVariableRates
+                );
+                futureBuyYearlyPayments = buyMortgageData.payments;
+                futureBuyYearlyBalances = buyMortgageData.balances;
+
+                expHousing += futureBuyYearlyPayments[0] || 0;
+                if (inputs.buyDeductionApply && 0 < 13) {
+                    let endOfYearBal = futureBuyYearlyBalances[0] || 0;
+                    let deduction = Math.min(21, endOfYearBal * 0.007);
+                    totalIncome += deduction;
+                }
             } else {
                 // Post purchase
                 let yearsPaid = yearAge - inputs.buyAge;
-                if (yearsPaid < futureMortgageYears) {
-                    expHousing = futureMortgagePayment;
-                    mortgageBalance -= (futureMortgagePayment - (mortgageBalance * inputs.buyRate));
+                if (yearsPaid < inputs.buyYears) {
+                    expHousing = futureBuyYearlyPayments[yearsPaid] || 0;
+                    if (inputs.buyDeductionApply && yearsPaid < 13) {
+                        let endOfYearBal = futureBuyYearlyBalances[yearsPaid] || 0;
+                        let deduction = Math.min(21, endOfYearBal * 0.007);
+                        totalIncome += deduction;
+                    }
                 } else {
                     expHousing = 20 * inflationMultiplier; // Maint/Tax after paid off
                 }
@@ -337,29 +746,55 @@ function calculateSimulation() {
         let expEdu = 0;
         inputs.children.forEach((child, index) => {
             let childAge = child.age + i;
-            if (childAge >= 0 && childAge <= 22) { // Univ ends at 22 approx
-                let costMap = EDUCATION_COSTS[child.course];
-                // Find nearest age cost (simplified)
-                let cost = costMap[childAge] || (costMap[Math.floor(childAge / 3) * 3] || 0);
-                if (childAge > 22) cost = 0;
+            if (childAge >= 3 && childAge <= 23) {
+                let cost = 0;
+                let stageName = '';
+
+                if (childAge >= 3 && childAge <= 5) {
+                    cost = DETAILED_EDUCATION_COSTS.nursery[child.nursery] || 0;
+                    stageName = '保育園/幼稚園';
+                } else if (childAge >= 6 && childAge <= 11) {
+                    cost = DETAILED_EDUCATION_COSTS.elementary[child.elementary] || 0;
+                    stageName = '小学校';
+                } else if (childAge >= 12 && childAge <= 14) {
+                    cost = DETAILED_EDUCATION_COSTS.junior_high[child.junior] || 0;
+                    stageName = '中学校';
+                } else if (childAge >= 15 && childAge <= 17) {
+                    cost = DETAILED_EDUCATION_COSTS.high_school[child.high] || 0;
+                    stageName = '高校';
+                } else if (childAge >= 18 && childAge <= 21) {
+                    cost = DETAILED_EDUCATION_COSTS.university[child.univ] || 0;
+                    stageName = '大学等';
+                } else if (childAge >= 22 && childAge <= 23) {
+                    cost = DETAILED_EDUCATION_COSTS.grad_school[child.grad] || 0;
+                    stageName = '大学院';
+                }
 
                 let adjustedCost = cost * inflationMultiplier;
                 expEdu += adjustedCost;
 
                 // Events
                 if (childAge === 6 && i > 0) events.push({ age: yearAge, text: `第${index + 1}子 小学校入学`, type: 'edu' });
+                if (childAge === 12 && i > 0) events.push({ age: yearAge, text: `第${index + 1}子 中学校入学`, type: 'edu' });
                 if (childAge === 15 && i > 0) events.push({ age: yearAge, text: `第${index + 1}子 高校入学`, type: 'edu' });
-                if (childAge === 18 && i > 0) events.push({ age: yearAge, text: `第${index + 1}子 大学入学`, type: 'edu' });
+                if (childAge === 18 && i > 0) events.push({ age: yearAge, text: `第${index + 1}子 大学等入学`, type: 'edu' });
+                if (childAge === 22 && i > 0 && child.grad !== 'none') events.push({ age: yearAge, text: `第${index + 1}子 大学院入学`, type: 'edu' });
             }
         });
         totalEdu += expEdu;
 
-        // 4. Events / Others Placeholder (Car buy every 10 years after 30)
+        // 4. Events / Others Placeholder
         let expOther = 0;
-        if (yearAge % 10 === 0 && yearAge >= 30 && yearAge <= 70) {
-            expOther = 300 * inflationMultiplier;
-            events.push({ age: yearAge, text: `車の買い替え等の一時費用 (${Math.round(expOther)}万円)`, type: 'other' });
-        }
+
+        // Custom Events
+        inputs.customEvents.forEach(evt => {
+            if (evt.age === yearAge) {
+                let adjustedCost = evt.cost * inflationMultiplier;
+                expOther += adjustedCost;
+                events.push({ age: yearAge, text: `${evt.name} (${Math.round(adjustedCost)}万円)`, type: 'other' });
+            }
+        });
+
         totalOthers += expOther;
 
         let totalExpense = expLiving + expHousing + expEdu + expOther;
@@ -407,8 +842,8 @@ function calculateSimulation() {
                     let drawMain = deficit * mainShare;
                     let drawSpouse = deficit * spouseShare;
 
-                    investmentMain -= drawMain;
-                    investmentSpouse -= drawSpouse;
+                    investmentMain = Math.max(0, investmentMain - drawMain);
+                    investmentSpouse = Math.max(0, investmentSpouse - drawSpouse);
                 } else {
                     // Everything zeroed out
                     investmentMain = 0;
@@ -428,6 +863,10 @@ function calculateSimulation() {
             age: yearAge,
             income: totalIncome,
             expense: totalExpense,
+            expLiving: expLiving,
+            expHousing: expHousing,
+            expEdu: expEdu,
+            expOther: expOther,
             balance: balance,
             savings: savings,
             investment: investmentMain + investmentSpouse,
@@ -472,7 +911,7 @@ function updateSummaryUI(data, events, depletionAge, peakExpenseAge, peakExpense
     limitEvents.push({ age: peakExpenseAge, text: `支出ピーク予想 (${Math.round(peakExpense)}万円/年)`, type: 'alert' });
 
     // Deduplicate and re-sort
-    const uniqueEvents = limitEvents.filter((v, i, a) => a.findIndex(t => (t.age === v.age && t.text === t.text)) === i).sort((a, b) => a.age - b.age);
+    const uniqueEvents = limitEvents.filter((v, i, a) => a.findIndex(t => (t.age === v.age && t.text === v.text)) === i).sort((a, b) => a.age - b.age);
 
     const eventsHtml = uniqueEvents.map(e => {
         let colorClass = 'bg-blue-500';
@@ -521,15 +960,41 @@ function drawMainChart(data) {
                     label: '収入',
                     type: 'bar',
                     data: data.map(d => d.income),
-                    backgroundColor: 'rgba(59, 130, 246, 0.4)', // blue-500
-                    yAxisID: 'y1'
+                    backgroundColor: 'rgba(59, 130, 246, 0.6)', // blue-500
+                    yAxisID: 'y1',
+                    stack: 'incomeGroup'
                 },
                 {
-                    label: '支出',
+                    label: '生活費',
                     type: 'bar',
-                    data: data.map(d => d.expense),
-                    backgroundColor: 'rgba(244, 63, 94, 0.4)', // rose-500
-                    yAxisID: 'y1'
+                    data: data.map(d => d.expLiving),
+                    backgroundColor: 'rgba(148, 163, 184, 0.8)', // slate-400
+                    yAxisID: 'y1',
+                    stack: 'expenseGroup'
+                },
+                {
+                    label: '住宅費',
+                    type: 'bar',
+                    data: data.map(d => d.expHousing),
+                    backgroundColor: 'rgba(245, 158, 11, 0.8)', // amber-500
+                    yAxisID: 'y1',
+                    stack: 'expenseGroup'
+                },
+                {
+                    label: '教育費',
+                    type: 'bar',
+                    data: data.map(d => d.expEdu),
+                    backgroundColor: 'rgba(16, 185, 129, 0.8)', // emerald-500
+                    yAxisID: 'y1',
+                    stack: 'expenseGroup'
+                },
+                {
+                    label: 'その他支出',
+                    type: 'bar',
+                    data: data.map(d => d.expOther),
+                    backgroundColor: 'rgba(139, 92, 246, 0.8)', // violet-500
+                    yAxisID: 'y1',
+                    stack: 'expenseGroup'
                 }
             ]
         },
@@ -541,7 +1006,14 @@ function drawMainChart(data) {
                 intersect: false,
             },
             plugins: {
-                legend: { display: false },
+                legend: {
+                    display: true,
+                    position: 'top',
+                    labels: {
+                        usePointStyle: true,
+                        boxWidth: 8
+                    }
+                },
                 tooltip: {
                     callbacks: {
                         label: function (context) {
@@ -570,6 +1042,7 @@ function drawMainChart(data) {
                     title: { display: true, text: '年間収支 (万円)' },
                     grid: { drawOnChartArea: false }, // only want the grid lines for one axis to show up
                     min: 0, // Ensure income/expense bar charts stay grounded at 0, otherwise they float if assets go negative
+                    stacked: true, // required for bar stacking on this axis
                     ticks: {
                         callback: function (value) { return value.toLocaleString(); }
                     }
@@ -665,14 +1138,130 @@ function loadData() {
             // In a real app we'd map all fields carefully
             document.getElementById('current-age').value = data.age;
             document.getElementById('income-main').value = data.incomeMain;
+            if (data.incomeCapAgeMain) document.getElementById('income-cap-age-main').value = data.incomeCapAgeMain;
             if (data.pensionStartMain) document.getElementById('pension-start-main').value = data.pensionStartMain;
+            if (data.retirementAgeMain !== undefined) document.getElementById('retirement-age-main').value = data.retirementAgeMain;
+            if (data.shokakuIncomeMain !== undefined) document.getElementById('shokaku-income-main').value = data.shokakuIncomeMain;
+            if (data.retirementAgeSpouse !== undefined) document.getElementById('retirement-age-spouse').value = data.retirementAgeSpouse;
+            if (data.shokakuIncomeSpouse !== undefined) document.getElementById('shokaku-income-spouse').value = data.shokakuIncomeSpouse;
             if (data.pensionAmountMain) document.getElementById('pension-amount-main').value = data.pensionAmountMain;
+            if (data.retirementBonusMain !== undefined && document.getElementById('retirement-bonus-main')) document.getElementById('retirement-bonus-main').value = data.retirementBonusMain;
 
             document.getElementById('current-savings').value = data.savings;
+
+            // Detailed living (re-populate and re-sum)
+            if (data.detailedLiving) {
+                const keys = Object.keys(data.detailedLiving);
+                keys.forEach(k => {
+                    const el = document.getElementById(`living-${k === 'extraEdu' ? 'extra-edu' : k}`);
+                    if (el) el.value = data.detailedLiving[k];
+                });
+                // Manually trigger sum update logic (wait for DOM ready which is already true here in loadData but just in case, call the function if it was global, or dispatch event)
+                const firstLivingItem = document.querySelector('.living-item');
+                if (firstLivingItem) firstLivingItem.dispatchEvent(new Event('change', { bubbles: true }));
+            }
 
             // Individual investments
             if (data.monthlyInvestMain !== undefined) document.getElementById('monthly-invest-main').value = data.monthlyInvestMain;
             if (data.yieldMain !== undefined) document.getElementById('investment-yield-main').value = data.yieldMain * 100;
+
+            // Housing & Mortgage
+            if (data.housingType) {
+                document.getElementById('housing-type').value = data.housingType;
+                toggleHousingType(); // ensure correct sections show
+            }
+
+            if (data.mortgageBal !== undefined) document.getElementById('mortgage-balance').value = data.mortgageBal;
+            if (data.mortgageYears !== undefined) document.getElementById('mortgage-years').value = data.mortgageYears;
+            if (data.mortgageRate !== undefined) document.getElementById('mortgage-rate').value = data.mortgageRate * 100;
+            if (data.mortgageInterestType) document.getElementById('mortgage-interest-type').value = data.mortgageInterestType;
+            if (data.mortgageRepaymentMethod) document.getElementById('mortgage-repayment-method').value = data.mortgageRepaymentMethod;
+
+            if (data.mortgageDeductionApply !== undefined && document.getElementById('mortgage-deduction-apply')) {
+                document.getElementById('mortgage-deduction-apply').checked = data.mortgageDeductionApply;
+                document.getElementById('mortgage-deduction-years-wrapper').classList.toggle('opacity-50', !data.mortgageDeductionApply);
+            }
+            if (data.mortgageDeductionYears !== undefined && document.getElementById('mortgage-deduction-years')) document.getElementById('mortgage-deduction-years').value = data.mortgageDeductionYears;
+
+            if (data.mortgageVariableRates && Array.isArray(data.mortgageVariableRates)) {
+                const evContainer = document.getElementById('mortgage-variable-events-container');
+                evContainer.innerHTML = '';
+                data.mortgageVariableRates.forEach(evt => {
+                    addVariableRateEvent('mortgage');
+                    const lastEvt = evContainer.lastElementChild;
+                    lastEvt.querySelector('.rate-years').value = evt.years || 0;
+                    lastEvt.querySelector('.rate-value').value = (evt.rate * 100).toFixed(1) || 0;
+                });
+            }
+            toggleMortgageUI();
+
+            // Buy Future
+            if (data.buyAge !== undefined) document.getElementById('buy-age').value = data.buyAge;
+            if (data.buyPrice !== undefined) document.getElementById('buy-price').value = data.buyPrice;
+            if (data.buyDown !== undefined) document.getElementById('buy-downpayment').value = data.buyDown;
+            if (data.buyCurrentRent !== undefined) document.getElementById('buy-current-rent').value = data.buyCurrentRent / 12;
+            if (data.buyYears !== undefined) document.getElementById('buy-years').value = data.buyYears;
+            if (data.buyRate !== undefined) document.getElementById('buy-rate').value = data.buyRate * 100;
+            if (data.buyInterestType) document.getElementById('buy-interest-type').value = data.buyInterestType;
+            if (data.buyRepaymentMethod) document.getElementById('buy-repayment-method').value = data.buyRepaymentMethod;
+            if (data.buyDeductionApply !== undefined && document.getElementById('buy-deduction-apply')) document.getElementById('buy-deduction-apply').checked = data.buyDeductionApply;
+
+            if (data.buyVariableRates && Array.isArray(data.buyVariableRates)) {
+                const evContainer = document.getElementById('buy-variable-events-container');
+                evContainer.innerHTML = '';
+                data.buyVariableRates.forEach(evt => {
+                    addVariableRateEvent('buy');
+                    const lastEvt = evContainer.lastElementChild;
+                    lastEvt.querySelector('.rate-years').value = evt.years || 0;
+                    lastEvt.querySelector('.rate-value').value = (evt.rate * 100).toFixed(1) || 0;
+                });
+            }
+            toggleBuyUI();
+
+            if (data.children && Array.isArray(data.children)) {
+                const container = document.getElementById('children-container');
+                container.innerHTML = ''; // clear default
+                data.children.forEach(child => {
+                    addChild(); // Will append a new child DOM element using the updated template
+                    const lastChild = container.lastElementChild;
+
+                    lastChild.querySelector('.child-age').value = child.age || 0;
+                    if (child.course && !child.nursery) {
+                        // Migration from old basic course to new detailed course (simple map)
+                        const legacyMap = {
+                            'public_all': { n: 'public', e: 'public', j: 'public', h: 'public', u: 'national' },
+                            'private_univ': { n: 'public', e: 'public', j: 'public', h: 'public', u: 'private_humanities' },
+                            'private_high_univ': { n: 'public', e: 'public', j: 'public', h: 'private', u: 'private_humanities' },
+                            'private_all': { n: 'private', e: 'private', j: 'private', h: 'private', u: 'private_humanities' }
+                        };
+                        const map = legacyMap[child.course] || legacyMap['public_all'];
+                        lastChild.querySelector('.child-nursery').value = map.n;
+                        lastChild.querySelector('.child-elementary').value = map.e;
+                        lastChild.querySelector('.child-junior').value = map.j;
+                        lastChild.querySelector('.child-high').value = map.h;
+                        lastChild.querySelector('.child-univ').value = map.u;
+                    } else {
+                        if (child.nursery) lastChild.querySelector('.child-nursery').value = child.nursery;
+                        if (child.elementary) lastChild.querySelector('.child-elementary').value = child.elementary;
+                        if (child.junior) lastChild.querySelector('.child-junior').value = child.junior;
+                        if (child.high) lastChild.querySelector('.child-high').value = child.high;
+                        if (child.univ) lastChild.querySelector('.child-univ').value = child.univ;
+                        if (child.grad) lastChild.querySelector('.child-grad').value = child.grad;
+                    }
+                });
+            }
+
+            if (data.customEvents && Array.isArray(data.customEvents)) {
+                const evContainer = document.getElementById('custom-events-container');
+                evContainer.innerHTML = '';
+                data.customEvents.forEach(evt => {
+                    addCustomEvent();
+                    const lastEvt = evContainer.lastElementChild;
+                    lastEvt.querySelector('.event-age').value = evt.age || 0;
+                    lastEvt.querySelector('.event-cost').value = evt.cost || 0;
+                    lastEvt.querySelector('.event-name').value = evt.name || '';
+                });
+            }
 
             if (data.hasSpouse) {
                 document.getElementById('has-spouse').checked = true;
@@ -680,8 +1269,10 @@ function loadData() {
                 document.getElementById('spouse-age').value = data.spouseAge || 30;
                 document.getElementById('income-spouse').value = data.incomeSpouse || 0;
                 if (data.incomeGrowthSpouse !== undefined) document.getElementById('income-growth-spouse').value = data.incomeGrowthSpouse * 100;
+                if (data.incomeCapAgeSpouse) document.getElementById('income-cap-age-spouse').value = data.incomeCapAgeSpouse;
                 if (data.pensionStartSpouse) document.getElementById('pension-start-spouse').value = data.pensionStartSpouse;
                 if (data.pensionAmountSpouse) document.getElementById('pension-amount-spouse').value = data.pensionAmountSpouse;
+                if (data.retirementBonusSpouse !== undefined && document.getElementById('retirement-bonus-spouse')) document.getElementById('retirement-bonus-spouse').value = data.retirementBonusSpouse;
                 if (data.monthlyInvestSpouse !== undefined) document.getElementById('monthly-invest-spouse').value = data.monthlyInvestSpouse;
                 if (data.yieldSpouse !== undefined) document.getElementById('investment-yield-spouse').value = data.yieldSpouse * 100;
             }

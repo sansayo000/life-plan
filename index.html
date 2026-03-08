@@ -146,6 +146,33 @@
                                 </div>
                                 <div class="grid grid-cols-2 gap-4">
                                     <div>
+                                        <label class="block text-xs text-slate-500 mb-1">昇給停止年齢</label>
+                                        <div class="relative">
+                                            <input type="number" id="income-cap-age-main" value="60"
+                                                class="input-field block w-full rounded-md border-slate-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm pr-8">
+                                            <span
+                                                class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm text-slate-500">歳</span>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs text-slate-500 mb-1">定年(退職)年齢</label>
+                                        <div class="relative">
+                                            <input type="number" id="retirement-age-main" value="60"
+                                                class="input-field block w-full rounded-md border-slate-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm pr-8">
+                                            <span
+                                                class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm text-slate-500">歳</span>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs text-slate-500 mb-1">嘱託年収(0=なし)</label>
+                                        <div class="relative">
+                                            <input type="number" id="shokaku-income-main" value="0"
+                                                class="input-field block w-full rounded-md border-slate-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm pr-12">
+                                            <span
+                                                class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm text-slate-500">万円</span>
+                                        </div>
+                                    </div>
+                                    <div>
                                         <label class="block text-xs text-slate-500 mb-1">年金受給開始年齢</label>
                                         <div class="relative">
                                             <input type="number" id="pension-start-main" value="65"
@@ -158,6 +185,15 @@
                                         <label class="block text-xs text-slate-500 mb-1">予想年金受給額（年額）</label>
                                         <div class="relative">
                                             <input type="number" id="pension-amount-main" value="200"
+                                                class="input-field block w-full rounded-md border-slate-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm pr-12">
+                                            <span
+                                                class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm text-slate-500">万円</span>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs text-slate-500 mb-1">退職金見込額</label>
+                                        <div class="relative">
+                                            <input type="number" id="retirement-bonus-main" value="1000"
                                                 class="input-field block w-full rounded-md border-slate-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm pr-12">
                                             <span
                                                 class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm text-slate-500">万円</span>
@@ -207,9 +243,34 @@
                                         </div>
                                     </div>
                                     <div>
+                                        <label class="block text-xs text-slate-500 mb-1">昇給停止年齢</label>
+                                        <div class="relative">
+                                            <input type="number" id="income-cap-age-spouse" value="60" disabled
+                                                class="input-field block w-full rounded-md border-slate-300 shadow-sm sm:text-sm pr-8 bg-slate-50 cursor-not-allowed">
+                                            <span
+                                                class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm text-slate-500">歳</span>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-xs text-slate-500 mb-1">定年(退職)年齢</label>
+                                        <div class="relative">
+                                            <input type="number" id="retirement-age-spouse" value="60" disabled
+                                                class="input-field block w-full rounded-md border-slate-300 shadow-sm sm:text-sm pr-8 bg-slate-50 cursor-not-allowed">
+                                            <span
+                                                class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm text-slate-500">歳</span>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs text-slate-500 mb-1">嘱託年収(0=なし)</label>
+                                        <div class="relative">
+                                            <input type="number" id="shokaku-income-spouse" value="0" disabled
+                                                class="input-field block w-full rounded-md border-slate-300 shadow-sm sm:text-sm pr-12 bg-slate-50 cursor-not-allowed">
+                                            <span
+                                                class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm text-slate-500">万円</span>
+                                        </div>
+                                    </div>
                                     <div>
                                         <label class="block text-xs text-slate-500 mb-1">年金受給開始年齢</label>
                                         <div class="relative">
@@ -223,6 +284,15 @@
                                         <label class="block text-xs text-slate-500 mb-1">予想年金受給額（年額）</label>
                                         <div class="relative">
                                             <input type="number" id="pension-amount-spouse" value="100" disabled
+                                                class="input-field block w-full rounded-md border-slate-300 shadow-sm sm:text-sm pr-12 bg-slate-50 cursor-not-allowed">
+                                            <span
+                                                class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm text-slate-500">万円</span>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs text-slate-500 mb-1">退職金見込額</label>
+                                        <div class="relative">
+                                            <input type="number" id="retirement-bonus-spouse" value="0" disabled
                                                 class="input-field block w-full rounded-md border-slate-300 shadow-sm sm:text-sm pr-12 bg-slate-50 cursor-not-allowed">
                                             <span
                                                 class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm text-slate-500">万円</span>
@@ -392,16 +462,71 @@
                         </svg>
                     </div>
                     <div id="expenses-info-content" class="p-6 space-y-5 hidden">
-                        <!-- Living Cost -->
+                        <!-- Detailed Living Cost -->
                         <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-1">基本生活費（月額）</label>
-                            <div class="relative">
-                                <input type="number" id="living-expense" value="25"
-                                    class="input-field block w-full rounded-md border-slate-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm pr-12">
-                                <span
-                                    class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm text-slate-500">万円</span>
+                            <div class="flex justify-between items-end mb-3">
+                                <h3 class="text-sm font-medium text-slate-800">基本生活費（月額）</h3>
+                                <div class="text-right">
+                                    <span class="text-xs text-slate-500">合計:</span>
+                                    <span class="text-lg font-bold text-slate-800 ml-1"
+                                        id="living-expense-total-display">25</span>
+                                    <span class="text-sm text-slate-500">万円</span>
+                                    <p class="text-xs text-slate-400 mt-1" id="living-expense-yearly-display">年間: 300万円
+                                    </p>
+                                </div>
                             </div>
-                            <p class="text-xs text-slate-500 mt-1" id="living-expense-yearly-display">年間: 300万円</p>
+                            <input type="hidden" id="living-expense" value="25">
+
+                            <div class="grid grid-cols-2 lg:grid-cols-3 gap-3">
+                                <div><label class="block text-xs text-slate-500 mb-1">食費</label><input type="number"
+                                        id="living-food" value="6" min="0"
+                                        class="living-item input-field block w-full rounded-md border-slate-300 shadow-sm sm:text-sm">
+                                </div>
+                                <div><label class="block text-xs text-slate-500 mb-1">日用品</label><input type="number"
+                                        id="living-daily" value="2" min="0"
+                                        class="living-item input-field block w-full rounded-md border-slate-300 shadow-sm sm:text-sm">
+                                </div>
+                                <div><label class="block text-xs text-slate-500 mb-1">公共料金</label><input type="number"
+                                        id="living-util" value="2" min="0"
+                                        class="living-item input-field block w-full rounded-md border-slate-300 shadow-sm sm:text-sm">
+                                </div>
+                                <div><label class="block text-xs text-slate-500 mb-1">通信費</label><input type="number"
+                                        id="living-comm" value="1.5" min="0" step="0.5"
+                                        class="living-item input-field block w-full rounded-md border-slate-300 shadow-sm sm:text-sm">
+                                </div>
+                                <div><label class="block text-xs text-slate-500 mb-1">医療費</label><input type="number"
+                                        id="living-medi" value="1" min="0"
+                                        class="living-item input-field block w-full rounded-md border-slate-300 shadow-sm sm:text-sm">
+                                </div>
+                                <div><label class="block text-xs text-slate-500 mb-1">趣味・娯楽</label><input type="number"
+                                        id="living-hobby" value="3" min="0"
+                                        class="living-item input-field block w-full rounded-md border-slate-300 shadow-sm sm:text-sm">
+                                </div>
+                                <div><label class="block text-xs text-slate-500 mb-1">衣服・美容</label><input type="number"
+                                        id="living-beauty" value="2" min="0"
+                                        class="living-item input-field block w-full rounded-md border-slate-300 shadow-sm sm:text-sm">
+                                </div>
+                                <div><label class="block text-xs text-slate-500 mb-1">交際費</label><input type="number"
+                                        id="living-social" value="2" min="0"
+                                        class="living-item input-field block w-full rounded-md border-slate-300 shadow-sm sm:text-sm">
+                                </div>
+                                <div><label class="block text-xs text-slate-500 mb-1">保険</label><input type="number"
+                                        id="living-ins" value="1.5" min="0" step="0.5"
+                                        class="living-item input-field block w-full rounded-md border-slate-300 shadow-sm sm:text-sm">
+                                </div>
+                                <div><label class="block text-xs text-slate-500 mb-1">養育・教育等</label><input type="number"
+                                        id="living-extra-edu" value="1.5" min="0" step="0.5"
+                                        class="living-item input-field block w-full rounded-md border-slate-300 shadow-sm sm:text-sm">
+                                </div>
+                                <div><label class="block text-xs text-slate-500 mb-1">交通費</label><input type="number"
+                                        id="living-trans" value="1" min="0"
+                                        class="living-item input-field block w-full rounded-md border-slate-300 shadow-sm sm:text-sm">
+                                </div>
+                                <div><label class="block text-xs text-slate-500 mb-1">その他</label><input type="number"
+                                        id="living-other" value="1.5" min="0" step="0.5"
+                                        class="living-item input-field block w-full rounded-md border-slate-300 shadow-sm sm:text-sm">
+                                </div>
+                            </div>
                         </div>
 
                         <!-- Housing -->
@@ -431,7 +556,7 @@
                             </div>
 
                             <!-- Mortgage -->
-                            <div id="housing-mortgage" class="space-y-3 hidden">
+                            <div id="housing-mortgage" class="space-y-4 hidden">
                                 <div class="grid grid-cols-2 gap-4">
                                     <div>
                                         <label class="block text-xs text-slate-500 mb-1">ローン残高</label>
@@ -451,20 +576,91 @@
                                                 class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm text-slate-500">年</span>
                                         </div>
                                     </div>
-                                    <div>
-                                        <label class="block text-xs text-slate-500 mb-1">金利（年利）</label>
-                                        <div class="relative">
+                                    <div class="col-span-2 grid grid-cols-2 gap-4">
+                                        <div>
+                                            <label class="block text-xs text-slate-500 mb-1">金利タイプ</label>
+                                            <select id="mortgage-interest-type"
+                                                class="input-field block w-full rounded-md border-slate-300 shadow-sm sm:text-sm"
+                                                onchange="toggleMortgageUI()">
+                                                <option value="fixed">固定金利</option>
+                                                <option value="variable">変動金利</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label class="block text-xs text-slate-500 mb-1">返済方法</label>
+                                            <select id="mortgage-repayment-method"
+                                                class="input-field block w-full rounded-md border-slate-300 shadow-sm sm:text-sm"
+                                                onchange="calculateRealtimeMortgage()">
+                                                <option value="equal_pi">元利均等返済</option>
+                                                <option value="equal_p">元金均等返済</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-span-2">
+                                        <label class="block text-xs text-slate-500 mb-1">現在の金利（年利）</label>
+                                        <div class="relative w-1/2 pr-2">
                                             <input type="number" id="mortgage-rate" value="1.0" step="0.1"
                                                 class="input-field block w-full rounded-md border-slate-300 shadow-sm sm:text-sm pr-8">
                                             <span
-                                                class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm text-slate-500">%</span>
+                                                class="absolute inset-y-0 right-0 pr-5 flex items-center text-sm text-slate-500">%</span>
                                         </div>
+                                    </div>
+                                    <div class="col-span-2 bg-slate-50 p-3 rounded-lg border border-slate-200 mt-2">
+                                        <div class="flex items-center justify-between mb-2">
+                                            <label class="text-sm font-medium text-slate-700">住宅ローン控除（減税）を適用する</label>
+                                            <label class="inline-flex items-center cursor-pointer">
+                                                <input type="checkbox" id="mortgage-deduction-apply"
+                                                    class="sr-only peer" checked
+                                                    onchange="if (typeof simData !== 'undefined' && simData.length > 0) calculateSimulation(); document.getElementById('mortgage-deduction-years-wrapper').classList.toggle('opacity-50', !this.checked);">
+                                                <div
+                                                    class="w-9 h-5 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary-500">
+                                                </div>
+                                            </label>
+                                        </div>
+                                        <div id="mortgage-deduction-years-wrapper"
+                                            class="flex items-center space-x-3 transition-opacity duration-300">
+                                            <label class="text-xs text-slate-500">控除の残り期間</label>
+                                            <div class="relative w-24">
+                                                <input type="number" id="mortgage-deduction-years" value="10" min="0"
+                                                    max="13"
+                                                    class="input-field block w-full rounded-md border-slate-300 shadow-sm sm:text-sm pr-8">
+                                                <span
+                                                    class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm text-slate-500">年</span>
+                                            </div>
+                                            <span class="text-xs text-slate-400">※最大控除額21万円想定（残高の0.7%）</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="mortgage-variable-events"
+                                    class="hidden border border-amber-200 bg-amber-50 rounded-lg p-3 space-y-2 mt-2">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <h4 class="text-xs font-medium text-amber-800">将来の金利上昇シナリオ</h4>
+                                        <button type="button" onclick="addVariableRateEvent('mortgage')"
+                                            class="text-xs text-amber-700 hover:text-amber-900 bg-amber-100 px-2 py-1 rounded">
+                                            + 追加
+                                        </button>
+                                    </div>
+                                    <div id="mortgage-variable-events-container" class="space-y-2">
+                                        <!-- Dynamically added -->
+                                    </div>
+                                </div>
+                                <div
+                                    class="bg-indigo-50 border border-indigo-100 rounded-lg p-3 mt-3 flex justify-between items-center">
+                                    <div>
+                                        <p class="text-xs text-indigo-600 mb-0.5">月々の支払額 (初月)</p>
+                                        <p class="text-lg font-bold text-indigo-900" id="mortgage-monthly-display">---万円
+                                        </p>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="text-xs text-indigo-600 mb-0.5">総支払額(概算)</p>
+                                        <p class="text-lg font-bold text-indigo-900" id="mortgage-total-display">---万円
+                                        </p>
                                     </div>
                                 </div>
                             </div>
 
                             <!-- Future Buy -->
-                            <div id="housing-buy-future" class="space-y-3 hidden">
+                            <div id="housing-buy-future" class="space-y-4 hidden">
                                 <div class="grid grid-cols-2 gap-4">
                                     <div>
                                         <label class="block text-xs text-slate-500 mb-1">購入予定年齢</label>
@@ -494,7 +690,48 @@
                                         </div>
                                     </div>
                                     <div>
-                                        <label class="block text-xs text-slate-500 mb-1">ローン設定金利</label>
+                                        <label class="block text-xs text-slate-500 mb-1">購入までの現在家賃（月額）</label>
+                                        <div class="relative">
+                                            <input type="number" id="buy-current-rent" value="10"
+                                                class="input-field block w-full rounded-md border-slate-300 shadow-sm sm:text-sm pr-12">
+                                            <span
+                                                class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm text-slate-500">万円</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-span-2 pt-2 border-t border-slate-100 mt-1 mb-1">
+                                        <h4 class="text-xs font-semibold text-slate-700">ローン設定（購入後）</h4>
+                                    </div>
+                                    <div class="col-span-2 grid grid-cols-2 gap-4">
+                                        <div>
+                                            <label class="block text-xs text-slate-500 mb-1">金利タイプ</label>
+                                            <select id="buy-interest-type"
+                                                class="input-field block w-full rounded-md border-slate-300 shadow-sm sm:text-sm"
+                                                onchange="toggleBuyUI()">
+                                                <option value="fixed">固定金利</option>
+                                                <option value="variable">変動金利</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label class="block text-xs text-slate-500 mb-1">返済方法</label>
+                                            <select id="buy-repayment-method"
+                                                class="input-field block w-full rounded-md border-slate-300 shadow-sm sm:text-sm"
+                                                onchange="calculateRealtimeBuy()">
+                                                <option value="equal_pi">元利均等返済</option>
+                                                <option value="equal_p">元金均等返済</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs text-slate-500 mb-1">借入期間</label>
+                                        <div class="relative">
+                                            <input type="number" id="buy-years" value="35"
+                                                class="input-field block w-full rounded-md border-slate-300 shadow-sm sm:text-sm pr-8">
+                                            <span
+                                                class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm text-slate-500">年</span>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs text-slate-500 mb-1">当初設定金利（年利）</label>
                                         <div class="relative">
                                             <input type="number" id="buy-rate" value="1.5" step="0.1"
                                                 class="input-field block w-full rounded-md border-slate-300 shadow-sm sm:text-sm pr-8">
@@ -502,14 +739,44 @@
                                                 class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm text-slate-500">%</span>
                                         </div>
                                     </div>
+                                    <div class="col-span-2 bg-slate-50 p-3 rounded-lg border border-slate-200 mt-2">
+                                        <div class="flex items-center justify-between">
+                                            <label class="text-sm font-medium text-slate-700">住宅ローン控除（減税）を適用する</label>
+                                            <label class="inline-flex items-center cursor-pointer">
+                                                <input type="checkbox" id="buy-deduction-apply" class="sr-only peer"
+                                                    checked
+                                                    onchange="if (typeof simData !== 'undefined' && simData.length > 0) calculateSimulation();">
+                                                <div
+                                                    class="w-9 h-5 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary-500">
+                                                </div>
+                                            </label>
+                                        </div>
+                                        <p class="text-xs text-slate-400 mt-1">
+                                            ※購入後13年間、年末残高の0.7%（上限21万円目安）分が実質的に収支にプラスされます。</p>
+                                    </div>
                                 </div>
-                                <div>
-                                    <label class="block text-xs text-slate-500 mb-1">購入までの現在家賃（月額）</label>
-                                    <div class="relative">
-                                        <input type="number" id="buy-current-rent" value="10"
-                                            class="input-field block w-full rounded-md border-slate-300 shadow-sm sm:text-sm pr-12">
-                                        <span
-                                            class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm text-slate-500">万円</span>
+                                <div id="buy-variable-events"
+                                    class="hidden border border-amber-200 bg-amber-50 rounded-lg p-3 space-y-2 mt-2">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <h4 class="text-xs font-medium text-amber-800">将来の金利上昇シナリオ</h4>
+                                        <button type="button" onclick="addVariableRateEvent('buy')"
+                                            class="text-xs text-amber-700 hover:text-amber-900 bg-amber-100 px-2 py-1 rounded">
+                                            + 追加
+                                        </button>
+                                    </div>
+                                    <div id="buy-variable-events-container" class="space-y-2">
+                                        <!-- Dynamically added -->
+                                    </div>
+                                </div>
+                                <div
+                                    class="bg-indigo-50 border border-indigo-100 rounded-lg p-3 mt-3 flex justify-between items-center">
+                                    <div>
+                                        <p class="text-xs text-indigo-600 mb-0.5">月々の支払額 (初月)</p>
+                                        <p class="text-lg font-bold text-indigo-900" id="buy-monthly-display">---万円</p>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="text-xs text-indigo-600 mb-0.5">総支払額(概算)</p>
+                                        <p class="text-lg font-bold text-indigo-900" id="buy-total-display">---万円</p>
                                     </div>
                                 </div>
                             </div>
@@ -527,34 +794,76 @@
 
                             <div id="children-container" class="space-y-4">
                                 <!-- Child 1 (Default) -->
-                                <div class="child-entry p-3 border border-slate-200 rounded-lg bg-white relative">
-                                    <button type="button" onclick="removeChild(this)"
-                                        class="absolute top-2 right-2 text-slate-400 hover:text-red-500" title="削除">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <div
+                                    class="child-entry p-4 border border-slate-200 rounded-lg bg-white relative shadow-sm">
+                                    <button type="button" onclick="removeChildEntry(this)"
+                                        class="absolute top-3 right-3 text-slate-400 hover:text-rose-500 transition-colors"
+                                        title="削除">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                 d="M6 18L18 6M6 6l12 12"></path>
                                         </svg>
                                     </button>
-                                    <div class="grid grid-cols-2 gap-3 pr-6">
-                                        <div>
-                                            <label class="block text-xs text-slate-500 mb-1">現在の年齢 (0=今年誕生,
-                                                マイナス=未来)</label>
-                                            <input type="number"
-                                                class="child-age input-field block w-full rounded-md border-slate-300 shadow-sm sm:text-sm"
-                                                value="0">
-                                        </div>
-                                        <div>
-                                            <label class="block text-xs text-slate-500 mb-1">進路コース</label>
-                                            <select
-                                                class="child-course input-field block w-full rounded-md border-slate-300 shadow-sm sm:text-sm">
-                                                <option value="public_all">全て公立</option>
-                                                <option value="private_univ" selected>大学のみ私立(文系)</option>
-                                                <option value="private_high_univ">高校・大学私立</option>
-                                                <option value="private_all">全て私立</option>
-                                            </select>
-                                        </div>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pr-6 mt-2">
+                                        <div><label class="block text-xs font-medium text-slate-700 mb-1">現在の年齢
+                                                (0=今年誕生)</label><input type="number"
+                                                class="child-age input-field block w-full rounded-md border-slate-300 shadow-sm sm:text-sm focus:border-primary-500 focus:ring-primary-500"
+                                                value="0" min="0" max="25"></div>
+                                        <div><label
+                                                class="block text-xs font-medium text-slate-700 mb-1">保育園/幼稚園</label><select
+                                                class="child-nursery input-field block w-full rounded-md border-slate-300 shadow-sm sm:text-sm">
+                                                <option value="public">公立</option>
+                                                <option value="private">私立</option>
+                                            </select></div>
+                                        <div><label
+                                                class="block text-xs font-medium text-slate-700 mb-1">小学校</label><select
+                                                class="child-elementary input-field block w-full rounded-md border-slate-300 shadow-sm sm:text-sm">
+                                                <option value="public">公立</option>
+                                                <option value="private">私立</option>
+                                            </select></div>
+                                        <div><label
+                                                class="block text-xs font-medium text-slate-700 mb-1">中学校</label><select
+                                                class="child-junior input-field block w-full rounded-md border-slate-300 shadow-sm sm:text-sm">
+                                                <option value="public">公立</option>
+                                                <option value="private">私立</option>
+                                            </select></div>
+                                        <div><label
+                                                class="block text-xs font-medium text-slate-700 mb-1">高校</label><select
+                                                class="child-high input-field block w-full rounded-md border-slate-300 shadow-sm sm:text-sm">
+                                                <option value="public">公立</option>
+                                                <option value="private">私立</option>
+                                            </select></div>
+                                        <div><label
+                                                class="block text-xs font-medium text-slate-700 mb-1">大学等</label><select
+                                                class="child-univ input-field block w-full rounded-md border-slate-300 shadow-sm sm:text-sm">
+                                                <option value="national">国公立</option>
+                                                <option value="private_humanities" selected>私立(文系)</option>
+                                                <option value="private_science">私立(理系)</option>
+                                            </select></div>
+                                        <div><label
+                                                class="block text-xs font-medium text-slate-700 mb-1">大学院</label><select
+                                                class="child-grad input-field block w-full rounded-md border-slate-300 shadow-sm sm:text-sm">
+                                                <option value="none" selected>なし</option>
+                                                <option value="national">国公立</option>
+                                                <option value="private">私立</option>
+                                            </select></div>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+
+                        <!-- Custom Events -->
+                        <div class="pt-4 border-t border-slate-100">
+                            <div class="flex items-center justify-between mb-3">
+                                <h3 class="text-sm font-medium text-slate-800">カスタムライフイベント</h3>
+                                <button type="button" onclick="addCustomEvent()"
+                                    class="text-xs font-medium text-primary-600 hover:text-primary-700 bg-primary-50 px-2 py-1 rounded">
+                                    + イベントを追加
+                                </button>
+                            </div>
+                            <p class="text-xs text-slate-500 mb-3">特定の年齢で発生する一時的な支出（マイカー購入、リフォーム、海外旅行など）を自由に追加できます。</p>
+                            <div id="custom-events-container" class="space-y-3">
+                                <!-- Dynamic custom events will go here -->
                             </div>
                         </div>
                     </div>
