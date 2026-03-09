@@ -430,6 +430,7 @@ document.addEventListener('DOMContentLoaded', () => {
     syncSliderInput('investment-yield-spouse-slider', 'investment-yield-spouse');
     syncSliderInput('inflation-rate-slider', 'inflation-rate');
     syncSliderInput('retirement-expense-ratio-slider', 'retirement-expense-ratio');
+    syncSliderInput('macro-slide-rate-slider', 'macro-slide-rate');
 
     // Attach calculate button
     document.getElementById('btn-calculate').addEventListener('click', () => {
@@ -539,6 +540,7 @@ function getInputs() {
         monthlyInvestSpouse: getVal('monthly-invest-spouse'),
         yieldSpouse: getVal('investment-yield-spouse') / 100,
         inflation: getVal('inflation-rate') / 100,
+        macroSlideRate: getVal('macro-slide-rate') / 100,
 
         // Expenses
         livingVar: getVal('living-expense') * 12, // Annual
@@ -643,8 +645,11 @@ function calculateSimulation() {
         const peakGrowthYearsM = Math.max(0, inputs.incomeCapAgeMain - currentAge);
         const peakIncomeM = inputs.incomeMain * Math.pow(1 + inputs.incomeGrowth, peakGrowthYearsM);
 
+        const pensionRate = Math.max(0, inputs.inflation - inputs.macroSlideRate);
+        const pensionMultiplier = Math.pow(1 + pensionRate, i);
+
         if (yearAge >= inputs.pensionStartMain) {
-            incomeM = inputs.pensionAmountMain * inflationMultiplier;          // ④年金期
+            incomeM = inputs.pensionAmountMain * pensionMultiplier;          // ④年金期（マクロ経済スライド適用）
         } else if (yearAge >= inputs.retirementAgeMain) {
             incomeM = inputs.shokakuIncomeMain;                                // ③嘱託期
         } else if (yearAge >= inputs.incomeCapAgeMain) {
@@ -667,7 +672,7 @@ function calculateSimulation() {
             const peakIncomeS = inputs.incomeSpouse * Math.pow(1 + inputs.incomeGrowthSpouse, peakGrowthYearsS);
 
             if (sAge >= inputs.pensionStartSpouse) {
-                incomeS = inputs.pensionAmountSpouse * inflationMultiplier;          // ④年金期
+                incomeS = inputs.pensionAmountSpouse * pensionMultiplier;          // ④年金期（マクロ経済スライド適用）
             } else if (sAge >= inputs.retirementAgeSpouse) {
                 incomeS = inputs.shokakuIncomeSpouse;                                // ③嘱託期
             } else if (sAge >= inputs.incomeCapAgeSpouse) {
@@ -1241,6 +1246,12 @@ function loadData() {
             if (data.investStopAgeMain !== undefined) document.getElementById('invest-stop-age-main').value = data.investStopAgeMain;
             if (data.investStopAgeSpouse !== undefined) document.getElementById('invest-stop-age-spouse').value = data.investStopAgeSpouse;
             if (data.investAutoAdjust !== undefined) document.getElementById('invest-auto-adjust').checked = data.investAutoAdjust;
+
+            if (data.macroSlideRate !== undefined) {
+                document.getElementById('macro-slide-rate').value = data.macroSlideRate * 100;
+                const msl = document.getElementById('macro-slide-rate-slider');
+                if (msl) msl.value = data.macroSlideRate * 100;
+            }
 
             if (data.retirementExpenseRatio !== undefined) {
                 document.getElementById('retirement-expense-ratio').value = data.retirementExpenseRatio * 100;

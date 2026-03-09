@@ -190,6 +190,31 @@
                                                 class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm text-slate-500">万円</span>
                                         </div>
                                     </div>
+                                    <div class="col-span-2 pt-2 mt-1 border-t border-slate-100">
+                                        <label
+                                            class="block text-xs text-slate-500 mb-1 text-orange-600 flex items-center">
+                                            <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"></path>
+                                            </svg>
+                                            マクロ経済スライド調整率
+                                        </label>
+                                        <div class="flex items-center space-x-2">
+                                            <input type="range" id="macro-slide-rate-slider" min="0" max="3" step="0.1"
+                                                value="0.9"
+                                                class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-orange-500">
+                                            <div class="relative w-20">
+                                                <input type="number" id="macro-slide-rate" value="0.9" step="0.1"
+                                                    min="0" max="3"
+                                                    class="input-field block w-full rounded-md border-slate-300 shadow-sm sm:text-sm pr-6 text-right font-medium text-orange-600">
+                                                <span
+                                                    class="absolute inset-y-0 right-0 pr-2 flex items-center text-sm text-orange-600">%</span>
+                                            </div>
+                                        </div>
+                                        <p class="text-xs text-slate-400 mt-1">※年金はインフレ率からこの値を差し引いた分だけ増加します（現行: 約0.9%）
+                                        </p>
+                                    </div>
                                     <div>
                                         <label class="block text-xs text-slate-500 mb-1">退職金見込額</label>
                                         <div class="relative">
