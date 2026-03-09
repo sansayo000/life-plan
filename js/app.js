@@ -1180,6 +1180,12 @@ function loadData() {
             if (data.monthlyInvestMain !== undefined) document.getElementById('monthly-invest-main').value = data.monthlyInvestMain;
             if (data.yieldMain !== undefined) document.getElementById('investment-yield-main').value = data.yieldMain * 100;
 
+            if (data.retirementExpenseRatio !== undefined) {
+                document.getElementById('retirement-expense-ratio').value = data.retirementExpenseRatio * 100;
+                const sl = document.getElementById('retirement-expense-ratio-slider');
+                if (sl) sl.value = data.retirementExpenseRatio * 100;
+            }
+
             // Housing & Mortgage
             if (data.housingType) {
                 document.getElementById('housing-type').value = data.housingType;
