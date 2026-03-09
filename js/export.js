@@ -81,6 +81,9 @@ document.addEventListener('DOMContentLoaded', () => {
             '年間収入 (万円)': Math.round(row.income),
             '年間支出 (万円)': Math.round(row.expense),
             '年間収支 (万円)': Math.round(row.balance),
+            '積立実績 (万円)': Math.round(row.actualInvest),
+            '積立予定 (万円)': Math.round(row.plannedInvest),
+            '積立状態': row.investNote === 'normal' ? '' : row.investNote,
             '貯蓄残高 (万円)': Math.round(row.savings),
             '投資残高 (万円)': Math.round(row.investment),
             '純資産合計 (万円)': Math.round(row.netWorth)
@@ -91,12 +94,14 @@ document.addEventListener('DOMContentLoaded', () => {
         // create worksheet
         const ws = XLSX.utils.json_to_sheet(sheetData);
 
-        // Adjust column widths roughly
         const wscols = [
             { wch: 10 }, // 年齢
             { wch: 15 }, // 収入
             { wch: 15 }, // 支出
             { wch: 15 }, // 収支
+            { wch: 15 }, // 積立実績
+            { wch: 15 }, // 積立予定
+            { wch: 12 }, // 積立状態
             { wch: 15 }, // 貯蓄
             { wch: 15 }, // 投資
             { wch: 20 }  // 純資産

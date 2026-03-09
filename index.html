@@ -377,6 +377,17 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <!-- 積立停止年齢 -->
+                                        <div>
+                                            <label class="block text-xs text-slate-500 mb-1">積立停止年齢</label>
+                                            <div class="relative">
+                                                <input type="number" id="invest-stop-age-main" value="60"
+                                                    class="input-field block w-full rounded-md border-slate-300 shadow-sm sm:text-sm pr-8">
+                                                <span
+                                                    class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm text-slate-500">歳</span>
+                                            </div>
+                                            <p class="text-xs text-slate-400 mt-1">※定年年齢に合わせるのが一般的です</p>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -417,9 +428,30 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <!-- 積立停止年齢 -->
+                                        <div>
+                                            <label class="block text-xs text-slate-500 mb-1">積立停止年齢</label>
+                                            <div class="relative">
+                                                <input type="number" id="invest-stop-age-spouse" value="60" disabled
+                                                    class="input-field block w-full rounded-md border-slate-300 shadow-sm sm:text-sm pr-8 bg-slate-50 cursor-not-allowed">
+                                                <span
+                                                    class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm text-slate-500">歳</span>
+                                            </div>
+                                        </div>
                                     </div>
                                     <p class="text-xs text-slate-400 mt-2">※配偶者情報を有効にした場合のみ入力可能です</p>
                                 </div>
+                            </div>
+
+                            <div class="pt-3 border-t border-slate-100 mt-3">
+                                <label class="inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" id="invest-auto-adjust" class="sr-only peer" checked>
+                                    <div
+                                        class="w-9 h-5 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary-500">
+                                    </div>
+                                    <span class="ml-3 text-sm font-medium text-slate-700">赤字年は積立を自動調整する</span>
+                                </label>
+                                <p class="text-xs text-slate-400 mt-1">ONにすると、収支が赤字の年は積立額を収支の範囲内に自動で減額します</p>
                             </div>
                         </div>
                         <div class="pt-2">
@@ -532,7 +564,7 @@
                         <div class="pt-4 border-t border-slate-100">
                             <h3 class="text-sm font-medium text-slate-800 mb-2">老後の生活費水準</h3>
                             <p class="text-xs text-slate-400 mb-3">
-                                年金受給開始後の生活費を現役時の何%とするか設定します。<br>
+                                <strong>本人の</strong>年金受給開始後の生活費を現役時の何%とするか設定します。<br>
                                 医療費増加を考慮する場合は100%以上も設定できます。
                             </p>
                             <div class="flex items-center space-x-4">
@@ -974,6 +1006,7 @@
                                     <th scope="col" class="px-4 py-3 font-medium text-slate-500">収入 (万)</th>
                                     <th scope="col" class="px-4 py-3 font-medium text-slate-500">支出 (万)</th>
                                     <th scope="col" class="px-4 py-3 font-medium text-slate-500">収支 (万)</th>
+                                    <th scope="col" class="px-4 py-3 font-medium text-slate-500">積立 (万)</th>
                                     <th scope="col" class="px-4 py-3 font-medium text-emerald-600">純資産 (万)</th>
                                 </tr>
                             </thead>

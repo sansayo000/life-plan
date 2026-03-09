@@ -578,7 +578,10 @@ function getInputs() {
         children: children,
         customEvents: customEvents,
         detailedLiving: detailedLiving,
-        retirementExpenseRatio: getVal('retirement-expense-ratio') / 100
+        retirementExpenseRatio: getVal('retirement-expense-ratio') / 100,
+        investStopAgeMain: parseInt(getVal('invest-stop-age-main')) || 60,
+        investStopAgeSpouse: parseInt(getVal('invest-stop-age-spouse')) || 60,
+        investAutoAdjust: document.getElementById('invest-auto-adjust').checked
     };
 }
 
@@ -653,8 +656,8 @@ function calculateSimulation() {
 
         // Retirement Bonus Main (定年年齢に発生)
         if (yearAge === inputs.retirementAgeMain && inputs.retirementBonusMain > 0) {
-            incomeM += inputs.retirementBonusMain * inflationMultiplier;
-            events.push({ age: yearAge, text: `本人退職金受取 (${Math.round(inputs.retirementBonusMain * inflationMultiplier)}万円)`, type: 'event' });
+            incomeM += inputs.retirementBonusMain;
+            events.push({ age: yearAge, text: `本人退職金受取 (${Math.round(inputs.retirementBonusMain)}万円)`, type: 'event' });
         }
 
         let sAge = inputs.spouseAge + i;
@@ -676,8 +679,8 @@ function calculateSimulation() {
 
             // Retirement Bonus Spouse (定年年齢に発生)
             if (sAge === inputs.retirementAgeSpouse && inputs.retirementBonusSpouse > 0) {
-                incomeS += inputs.retirementBonusSpouse * inflationMultiplier;
-                events.push({ age: sAge, text: `配偶者退職金受取 (${Math.round(inputs.retirementBonusSpouse * inflationMultiplier)}万円)`, type: 'event' });
+                incomeS += inputs.retirementBonusSpouse;
+                events.push({ age: sAge, text: `配偶者退職金受取 (${Math.round(inputs.retirementBonusSpouse)}万円)`, type: 'event' });
             }
         }
 
@@ -685,7 +688,7 @@ function calculateSimulation() {
 
         // --- Expenses ---
         // 1. Living (scales with inflation, drops slightly in retirement)
-        let retirementDrop = (yearAge >= inputs.pensionStartMain || sAge >= inputs.pensionStartSpouse) ? inputs.retirementExpenseRatio : 1.0;
+        let retirementDrop = (yearAge >= inputs.pensionStartMain) ? inputs.retirementExpenseRatio : 1.0;
         let expLiving = inputs.livingVar * inflationMultiplier * retirementDrop;
         totalLiving += expLiving;
 
@@ -807,45 +810,74 @@ function calculateSimulation() {
         }
 
         // --- Balance & Assets ---
-        let balance = totalIncome - totalExpense;
+        let balanceBeforeInvest = totalIncome - totalExpense;
 
+        // --- 投資の計算 ---
+
+        // 1. 予定積立額を決定
+        let plannedInvestMain = inputs.monthlyInvestMain * 12;
+        let plannedInvestSpouse = inputs.hasSpouse ? (inputs.monthlyInvestSpouse * 12) : 0;
+
+        // 2. 年齢による停止判定
+        if (yearAge >= inputs.investStopAgeMain) plannedInvestMain = 0;
+        if (inputs.hasSpouse && sAge >= inputs.investStopAgeSpouse) plannedInvestSpouse = 0;
+
+        let plannedInvestThisYear = plannedInvestMain + plannedInvestSpouse;
+        let actualInvestMain = plannedInvestMain;
+        let actualInvestSpouse = plannedInvestSpouse;
+        let investNoteThisYear = 'normal';
+
+        // 年齢停止の判定
+        if (yearAge >= inputs.investStopAgeMain && inputs.monthlyInvestMain > 0) {
+            investNoteThisYear = 'stopped_age';
+        }
+
+        // 4. 赤字自動調整
+        if (inputs.investAutoAdjust && balanceBeforeInvest < plannedInvestThisYear) {
+            if (balanceBeforeInvest <= 0) {
+                // 完全赤字 → 積立ゼロ
+                actualInvestMain = 0;
+                actualInvestSpouse = 0;
+                if (investNoteThisYear === 'normal') investNoteThisYear = 'stopped_deficit';
+            } else {
+                // 一部可能 → 按分で減額
+                let ratio = balanceBeforeInvest / plannedInvestThisYear;
+                actualInvestMain = Math.floor(plannedInvestMain * ratio);
+                actualInvestSpouse = Math.floor(plannedInvestSpouse * ratio);
+                if (investNoteThisYear === 'normal') investNoteThisYear = 'reduced';
+            }
+        }
+
+        let actualInvestThisYear = actualInvestMain + actualInvestSpouse;
+
+        // 5. 既存投資のリターン計算（積立前の残高に対して）
         let invReturnMain = investmentMain * inputs.yieldMain;
         let invReturnSpouse = investmentSpouse * (inputs.hasSpouse ? inputs.yieldSpouse : 0);
 
-        // Annual investment additions
-        let annualInvestMain = inputs.monthlyInvestMain * 12;
-        let annualInvestSpouse = inputs.hasSpouse ? (inputs.monthlyInvestSpouse * 12) : 0;
-        let totalAnnualInvest = annualInvestMain + annualInvestSpouse;
+        // 6. 投資残高を更新（リターン + 実際の積立額）
+        investmentMain += invReturnMain + actualInvestMain;
+        investmentSpouse += invReturnSpouse + actualInvestSpouse;
 
-        // Apply returns and intended investments
-        investmentMain += invReturnMain + annualInvestMain;
-        investmentSpouse += invReturnSpouse + annualInvestSpouse;
+        // 7. 残りの現金収支
+        let cashBalance = balanceBeforeInvest - actualInvestThisYear;
 
-        // Adjust balance by the intended investments (investment is a form of "expense" from cashflow perspective to shift to assets)
-        let cashBalanceAfterInvest = balance - totalAnnualInvest;
-
-        if (cashBalanceAfterInvest > 0) {
-            savings += cashBalanceAfterInvest;
+        if (cashBalance >= 0) {
+            savings += cashBalance;
         } else {
-            // Deficit covering strategy
-            let deficit = Math.abs(cashBalanceAfterInvest);
+            // 赤字補填
+            let deficit = Math.abs(cashBalance);
             if (savings >= deficit) {
                 savings -= deficit;
             } else {
                 deficit -= savings;
                 savings = 0;
-
-                // Draw from investments to cover remaining deficit (draw from spouse first, then main linearly, or proportional)
+                // 投資から取崩し（按分）
                 let totalInv = investmentMain + investmentSpouse;
                 if (totalInv > 0) {
                     let mainShare = investmentMain / totalInv;
                     let spouseShare = investmentSpouse / totalInv;
-
-                    let drawMain = deficit * mainShare;
-                    let drawSpouse = deficit * spouseShare;
-
-                    investmentMain = Math.max(0, investmentMain - drawMain);
-                    investmentSpouse = Math.max(0, investmentSpouse - drawSpouse);
+                    investmentMain = Math.max(0, investmentMain - deficit * mainShare);
+                    investmentSpouse = Math.max(0, investmentSpouse - deficit * spouseShare);
                 } else {
                     // Everything zeroed out
                     investmentMain = 0;
@@ -861,6 +893,17 @@ function calculateSimulation() {
             events.push({ age: yearAge, text: `🔥 資産が枯渇する見込みです`, type: 'alert' });
         }
 
+        // 積立状態変化のイベント記録（初回のみ）
+        if (investNoteThisYear === 'stopped_age' && !events.find(e => e.text.includes('積立投資を停止'))) {
+            events.push({ age: yearAge, text: `⏹️ 積立投資を停止（${yearAge}歳で停止年齢到達）`, type: 'event' });
+        }
+        if (investNoteThisYear === 'stopped_deficit' && !events.find(e => e.text.includes('赤字により積立を停止'))) {
+            events.push({ age: yearAge, text: `⚠️ 赤字により積立を停止（初回: ${yearAge}歳）`, type: 'alert' });
+        }
+        if (investNoteThisYear === 'reduced' && !events.find(e => e.text.includes('赤字により積立を減額'))) {
+            events.push({ age: yearAge, text: `📉 赤字により積立を減額（初回: ${yearAge}歳、${Math.round(actualInvestThisYear)}/${Math.round(plannedInvestThisYear)}万円）`, type: 'alert' });
+        }
+
         simData.push({
             age: yearAge,
             income: totalIncome,
@@ -869,10 +912,13 @@ function calculateSimulation() {
             expHousing: expHousing,
             expEdu: expEdu,
             expOther: expOther,
-            balance: balance,
+            balance: balanceBeforeInvest,
             savings: savings,
             investment: investmentMain + investmentSpouse,
-            netWorth: netWorth // Removed Math.max(0, netWorth) to allow negatives
+            netWorth: netWorth, // Removed Math.max(0, netWorth) to allow negatives
+            actualInvest: actualInvestThisYear,
+            plannedInvest: plannedInvestThisYear,
+            investNote: investNoteThisYear
         });
     }
 
@@ -1118,12 +1164,24 @@ function updateDataTable(data) {
     data.forEach((row, i) => {
         // Show every year or maybe every 5 years to save space? Let's show every 5 for the table by default to keep DOM light, unless it's the specific export.
         if (i === 0 || i === data.length - 1 || row.age % 5 === 0) {
+            let investDisplay = '';
+            if (row.investNote === 'stopped_age') {
+                investDisplay = `<span class="text-slate-400">⏹ 停止</span>`;
+            } else if (row.investNote === 'stopped_deficit') {
+                investDisplay = `<span class="text-rose-500">⚠ 0 / ${Math.round(row.plannedInvest)}</span>`;
+            } else if (row.investNote === 'reduced') {
+                investDisplay = `<span class="text-amber-600">⚠ ${Math.round(row.actualInvest)} / ${Math.round(row.plannedInvest)}</span>`;
+            } else {
+                investDisplay = `${Math.round(row.actualInvest)}`;
+            }
+
             html += `
                 <tr class="hover:bg-slate-50">
                     <td class="px-4 py-3 whitespace-nowrap text-center">${row.age}</td>
                     <td class="px-4 py-3 whitespace-nowrap">${Math.round(row.income).toLocaleString()}</td>
                     <td class="px-4 py-3 whitespace-nowrap text-rose-600">${Math.round(row.expense).toLocaleString()}</td>
                     <td class="px-4 py-3 whitespace-nowrap ${row.balance >= 0 ? 'text-primary-600' : 'text-slate-600'}">${Math.round(row.balance).toLocaleString()}</td>
+                    <td class="px-4 py-3 whitespace-nowrap text-sm">${investDisplay}</td>
                     <td class="px-4 py-3 whitespace-nowrap font-bold text-emerald-600">${Math.round(row.netWorth).toLocaleString()}</td>
                 </tr>
             `;
@@ -1131,7 +1189,7 @@ function updateDataTable(data) {
     });
 
     // Note at bottom
-    html += `<tr><td colspan="5" class="px-4 py-2 text-xs text-center text-slate-400">※表示は5年ごとの抜粋です。全データはExcel出力で確認できます。</td></tr>`;
+    html += `<tr><td colspan="6" class="px-4 py-2 text-xs text-center text-slate-400">※表示は5年ごとの抜粋です。全データはExcel出力で確認できます。</td></tr>`;
     tbody.innerHTML = html;
 }
 
@@ -1179,6 +1237,10 @@ function loadData() {
             // Individual investments
             if (data.monthlyInvestMain !== undefined) document.getElementById('monthly-invest-main').value = data.monthlyInvestMain;
             if (data.yieldMain !== undefined) document.getElementById('investment-yield-main').value = data.yieldMain * 100;
+
+            if (data.investStopAgeMain !== undefined) document.getElementById('invest-stop-age-main').value = data.investStopAgeMain;
+            if (data.investStopAgeSpouse !== undefined) document.getElementById('invest-stop-age-spouse').value = data.investStopAgeSpouse;
+            if (data.investAutoAdjust !== undefined) document.getElementById('invest-auto-adjust').checked = data.investAutoAdjust;
 
             if (data.retirementExpenseRatio !== undefined) {
                 document.getElementById('retirement-expense-ratio').value = data.retirementExpenseRatio * 100;
