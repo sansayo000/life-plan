@@ -529,6 +529,26 @@
                             </div>
                         </div>
 
+                        <div class="pt-4 border-t border-slate-100">
+                            <h3 class="text-sm font-medium text-slate-800 mb-2">老後の生活費水準</h3>
+                            <p class="text-xs text-slate-400 mb-3">
+                                年金受給開始後の生活費を現役時の何%とするか設定します。<br>
+                                医療費増加を考慮する場合は100%以上も設定できます。
+                            </p>
+                            <div class="flex items-center space-x-4">
+                                <input type="range" id="retirement-expense-ratio-slider" min="60" max="120" step="5"
+                                    value="80"
+                                    class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-orange-500">
+                                <div class="relative w-20">
+                                    <input type="number" id="retirement-expense-ratio" value="80" step="5" min="60"
+                                        max="120"
+                                        class="input-field block w-full rounded-md border-slate-300 shadow-sm sm:text-sm pr-6 text-right font-medium text-orange-600">
+                                    <span
+                                        class="absolute inset-y-0 right-0 pr-2 flex items-center text-sm text-orange-600">%</span>
+                                </div>
+                            </div>
+                        </div>
+
                         <!-- Housing -->
                         <div class="pt-4 border-t border-slate-100">
                             <h3 class="text-sm font-medium text-slate-800 mb-3">住宅費</h3>

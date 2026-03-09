@@ -429,6 +429,7 @@ document.addEventListener('DOMContentLoaded', () => {
     syncSliderInput('investment-yield-main-slider', 'investment-yield-main');
     syncSliderInput('investment-yield-spouse-slider', 'investment-yield-spouse');
     syncSliderInput('inflation-rate-slider', 'inflation-rate');
+    syncSliderInput('retirement-expense-ratio-slider', 'retirement-expense-ratio');
 
     // Attach calculate button
     document.getElementById('btn-calculate').addEventListener('click', () => {
@@ -576,7 +577,8 @@ function getInputs() {
 
         children: children,
         customEvents: customEvents,
-        detailedLiving: detailedLiving
+        detailedLiving: detailedLiving,
+        retirementExpenseRatio: getVal('retirement-expense-ratio') / 100
     };
 }
 
@@ -683,7 +685,7 @@ function calculateSimulation() {
 
         // --- Expenses ---
         // 1. Living (scales with inflation, drops slightly in retirement)
-        let retirementDrop = (yearAge >= inputs.pensionStartMain || sAge >= inputs.pensionStartSpouse) ? 0.8 : 1.0;
+        let retirementDrop = (yearAge >= inputs.pensionStartMain || sAge >= inputs.pensionStartSpouse) ? inputs.retirementExpenseRatio : 1.0;
         let expLiving = inputs.livingVar * inflationMultiplier * retirementDrop;
         totalLiving += expLiving;
 
@@ -949,11 +951,17 @@ function drawMainChart(data) {
                 {
                     label: '純資産',
                     data: data.map(d => d.netWorth),
-                    borderColor: '#10b981', // emerald-500
-                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
                     borderWidth: 3,
                     yAxisID: 'y',
-                    fill: true,
+                    fill: {
+                        target: { value: 0 },
+                        above: 'rgba(16, 185, 129, 0.1)',   // プラス域: 緑
+                        below: 'rgba(239, 68, 68, 0.15)'    // マイナス域: 赤
+                    },
+                    segment: {
+                        borderColor: ctx =>
+                            (ctx.p0.parsed.y < 0 || ctx.p1.parsed.y < 0) ? '#ef4444' : '#10b981'
+                    },
                     tension: 0.4
                 },
                 {
@@ -967,7 +975,7 @@ function drawMainChart(data) {
                 {
                     label: '生活費',
                     type: 'bar',
-                    data: data.map(d => d.expLiving),
+                    data: data.map(d => -d.expLiving),
                     backgroundColor: 'rgba(148, 163, 184, 0.8)', // slate-400
                     yAxisID: 'y1',
                     stack: 'expenseGroup'
@@ -975,7 +983,7 @@ function drawMainChart(data) {
                 {
                     label: '住宅費',
                     type: 'bar',
-                    data: data.map(d => d.expHousing),
+                    data: data.map(d => -d.expHousing),
                     backgroundColor: 'rgba(245, 158, 11, 0.8)', // amber-500
                     yAxisID: 'y1',
                     stack: 'expenseGroup'
@@ -983,7 +991,7 @@ function drawMainChart(data) {
                 {
                     label: '教育費',
                     type: 'bar',
-                    data: data.map(d => d.expEdu),
+                    data: data.map(d => -d.expEdu),
                     backgroundColor: 'rgba(16, 185, 129, 0.8)', // emerald-500
                     yAxisID: 'y1',
                     stack: 'expenseGroup'
@@ -991,7 +999,7 @@ function drawMainChart(data) {
                 {
                     label: 'その他支出',
                     type: 'bar',
-                    data: data.map(d => d.expOther),
+                    data: data.map(d => -d.expOther),
                     backgroundColor: 'rgba(139, 92, 246, 0.8)', // violet-500
                     yAxisID: 'y1',
                     stack: 'expenseGroup'
@@ -1040,11 +1048,18 @@ function drawMainChart(data) {
                     display: true,
                     position: 'right',
                     title: { display: true, text: '年間収支 (万円)' },
-                    grid: { drawOnChartArea: false }, // only want the grid lines for one axis to show up
-                    min: 0, // Ensure income/expense bar charts stay grounded at 0, otherwise they float if assets go negative
-                    stacked: true, // required for bar stacking on this axis
+                    grid: {
+                        drawOnChartArea: false,
+                        color: ctx => ctx.tick && ctx.tick.value === 0
+                            ? 'rgba(100, 100, 100, 0.6)'
+                            : 'rgba(0, 0, 0, 0.05)',
+                        lineWidth: ctx => ctx.tick && ctx.tick.value === 0 ? 2 : 1,
+                    },
+                    stacked: true,
                     ticks: {
-                        callback: function (value) { return value.toLocaleString(); }
+                        callback: function (value) {
+                            return Math.abs(value).toLocaleString();
+                        }
                     }
                 }
             }
