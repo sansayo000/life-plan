@@ -1027,7 +1027,7 @@ function drawMainChart(data) {
                         label: function (context) {
                             let label = context.dataset.label || '';
                             if (label) label += ': ';
-                            if (context.parsed.y !== null) label += new Intl.NumberFormat('ja-JP').format(Math.round(context.parsed.y)) + '万円';
+                            if (context.parsed.y !== null) label += new Intl.NumberFormat('ja-JP').format(Math.abs(Math.round(context.parsed.y))) + '万円';
                             return label;
                         }
                     }
